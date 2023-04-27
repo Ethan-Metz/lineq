@@ -2,7 +2,7 @@
 name = "lineq"
 version = "0.1.0"
 license = "MIT"
-decription = "Linear algebra library"
+description = "Linear algebra library"
 repository = "https://github.com/Ethan-Metz/lineq/"
 readme = "README.md"
 keywords = ["lineq", "linq", "linear-algebra", "vector", "matrix"]
