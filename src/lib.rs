@@ -9,6 +9,15 @@
 //!   arrays and boxed arrays respectively.
 //! - Structs for handling square matricies like [Mat22](crate::mat22::Mat22) and
 //!   [Mat33](crate::mat33::Mat33).
+//!
+//! Vectors can be easily initialized and used:
+//! '''rust
+//! # extern crate lineq
+//! use lineq::vec3::Vec3;
+//! let a : Vec3 = Vec3::UP;
+//! let b : Vec3 = Vec3::LEFT;
+//! assert_eq!(a.cross(b),Vec3::IN);
+//! '''
 
 #![feature(new_uninit)]
 #![feature(slice_ptr_get)]
