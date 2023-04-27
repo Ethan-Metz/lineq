@@ -1,0 +1,10 @@
+[package]
+name = "lineq"
+version = "0.1.0"
+license = "MIT"
+decription = "Linear algebra library"
+
+
+[dependencies]
+impls = "1.0.3"
+paste = "1.0.12"
