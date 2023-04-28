@@ -1,3 +1,25 @@
+/// creates an implmentation of [`Deref`] for a given one element tuple struct.
+///
+/// This macro expects either an internal item that is a value ("val") or a pointer 
+/// ("ptr").
+///
+/// Descriptions of input variables:
+/// - tin: the input type, this will be your outside struct type.
+/// - tout: the output type, this will be your internal type.
+/// - gen: if your struct includes one, and only one, const generic, then this will
+///   be the name of it.
+/// - gent: if your struct includes one, and only one, const generic, then this will
+///   be the type of that const generic.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::Deref;
+/// use lineq::vec3arr::Vec3arr;
+///
+/// deref_impl! {Deref val Vec3arr<N>; to [Vec3; N]; const N: usize}
+/// ```
 #[macro_export]
 macro_rules! deref_impl {
         (Deref val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
