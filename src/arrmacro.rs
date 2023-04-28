@@ -1,4 +1,4 @@
-/// creates an implmentation of [`Deref`] for a given one element tuple struct.
+/// creates an implmentation of [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html) for a given one element tuple struct.
 ///
 /// This macro expects either an internal item that is a value ("val") or a pointer 
 /// ("ptr").
