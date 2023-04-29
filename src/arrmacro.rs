@@ -86,7 +86,7 @@ macro_rules! deref_mut_impl {
         };
 }
 
-/// creates an implmentation of some given operation for a given one element tuple struct.
+/// creates an implmentation of some given allocating operation for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
@@ -172,6 +172,46 @@ macro_rules! pv_value_impl {
 	};
 }
 
+/// creates an implmentation of some given inplace operation for a given one element tuple struct.
+///
+/// **This macro is mostly for internal use to reduce repeated lines**
+///
+/// This macro is a consolidation of 2 [inplace_impl](crate::inplace_impl) calls where they 
+/// go through the 2 possibilities for pointer or value for the given rhs.
+///
+/// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
+/// about whether rhs is an array type or a single value (1 or 0 respectively).
+///
+/// Descriptions of input variables:
+/// - imp: The name of the implmentation for the operation that you are calling.
+/// - func: The the name of the internal function for the implmentation. It may be the
+///   implmentation name but lower case, or it may be more complex.
+/// - op: The operation that is performed, if, for example, the implmentation was AddAssign, then
+///   op would be +=.
+/// - rhs: this is the type on the right hand side of the operation.
+/// - lhs: this is the type on the left hand side of the operation.
+/// - gen: if your your types include one, and only one, const generic in total, then this
+///    will be the name of it.
+/// - gent: if your your types include one, and only one, const generic in total, then this
+///    will be the type of that const generic.
+/// - lt: if your your types include one, and only one, lifetime in total, then this will
+///   be the name for it.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::AddAssign;
+/// use lineq::pv_inplace_impl;
+/// use lineq::inplace_impl;
+/// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3arr::Vec3win;
+///
+/// pv_inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// // the above macro instance has the same effect as the 2 below
+/// inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// inplace_impl! {AddAssign;add_assign;+=; 1 &Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// ```
 #[macro_export]
 macro_rules! pv_inplace_impl {
 	($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
@@ -192,6 +232,41 @@ macro_rules! pv_inplace_impl {
         };
 }
 
+/// creates an implmentation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
+/// ) for a given one element tuple struct.
+///
+/// **This macro is mostly for internal use to reduce repeated lines**
+///
+/// This macro is a consolidation of 4 [dot_impl](crate::dot_impl) calls where they 
+/// go through the 4 possibilities for pointer or value for the given rhs and lhs.
+///
+/// Descriptions of input variables:
+/// - rhs: this is the type on the right hand side of the operation.
+/// - lhs: this is the type on the left hand side of the operation.
+/// - gen: if your your types include one, and only one, const generic in total, then this
+///    will be the name of it.
+/// - gent: if your your types include one, and only one, const generic in total, then this
+///    will be the type of that const generic.
+/// - lt: if your your types include one, and only one, lifetime in total, then this will
+///   be the name for it.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::Mul;
+/// use lineq::pv_dot_impl;
+/// use lineq::dot_impl;
+/// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3arr::Vec3win;
+///
+/// pv_dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// // the above macro instance has the same effect as the 4 below
+/// dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// dot_impl! {Dot &Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// dot_impl! {Dot Vec3win<'a>; for &Vec3arr<N>; const N: usize; <'a>}
+/// dot_impl! {Dot &Vec3win<'a>; for &Vec3arr<N>; const N: usize; <'a>}
+/// ```
 #[macro_export]
 macro_rules! pv_dot_impl {
 	(Dot $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
