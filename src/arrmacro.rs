@@ -16,6 +16,7 @@
 /// ```rust
 /// # extern crate lineq
 /// use std::ops::Deref;
+/// use lineq::deref_impl;
 /// use lineq::vec3arr::Vec3arr;
 ///
 /// deref_impl! {Deref val Vec3arr<N>; to [Vec3; N]; const N: usize}
@@ -40,6 +41,29 @@ macro_rules! deref_impl {
         };
 }
 
+/// creates an implmentation of [DerefMut](https://doc.rust-lang.org/std/ops/trait.DerefMut.html) for a given one element tuple struct.
+///
+/// This macro expects either an internal item that is a value ("val") or a pointer 
+/// ("ptr").
+///
+/// Descriptions of input variables:
+/// - tin: the input type, this will be your outside struct type.
+/// - tout: the output type, this will be your internal type.
+/// - gen: if your struct includes one, and only one, const generic, then this will
+///   be the name of it.
+/// - gent: if your struct includes one, and only one, const generic, then this will
+///   be the type of that const generic.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::DerefMut;
+/// use lineq::deref_mut_impl;
+/// use lineq::vec3arr::Vec3arr;
+///
+/// deref_mut_impl! {DerefMut val Vec3arr<N>; to [Vec3; N]; const N: usize}
+/// ```
 #[macro_export]
 macro_rules! deref_mut_impl {
         (DerefMut val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
@@ -58,6 +82,44 @@ macro_rules! deref_mut_impl {
         };
 }
 
+/// creates an implmentation of some given operation for a given one element tuple struct.
+///
+/// This macro is a consolidation of 4 [value_impl](crate::value_impl) calls where they 
+/// go through the four possibilities for pointer or value for the two given types.
+///
+/// This macro has three forms, marked with a 1, 2, and 3. These numbers mark in binary
+/// about whether each type on each side is an array type or a single value (1 or 0 respectively).
+/// For example for form 2, the first type mentioned, ie rhs, will be an array while the second type,
+/// ie lhs, will be a value as the binary representation is 0b10.
+///
+/// Descriptions of input variables:
+/// - imp: The name of the implmentation for the operation that you are calling.
+/// - func: The the name of the internal function for the implmentation. It may be the
+///   implmentation name but lower case, or it may be more complex.
+/// - op: The operation that is performed, if, for example, the implmentation was Add, then
+///   op would be +.
+/// - rhs: this is the type on the right hand side of the operation.
+/// - lhs: this is the type on the left hand side of the operation.
+/// - out: this is the type that results after the operation, so if you add a f32 to a f32, your
+///   output type is f32.
+/// - gen: if your your types include one, and only one, const generic in total, then this
+///    will be the name of it.
+/// - gent: if your your types include one, and only one, const generic in total, then this
+///    will be the type of that const generic.
+/// - lt: if your your types include one, and only one, lifetime in total, then this will
+///   be the name for it.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::Add;
+/// use lineq::pv_value_impl;
+/// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3arr::Vec3win;
+///
+/// pv_value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// ```
 #[macro_export]
 macro_rules! pv_value_impl {
 	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
