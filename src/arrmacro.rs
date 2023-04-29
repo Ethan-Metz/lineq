@@ -115,10 +115,16 @@ macro_rules! deref_mut_impl {
 /// # extern crate lineq
 /// use std::ops::Add;
 /// use lineq::pv_value_impl;
+/// use lineq::value_impl;
 /// use lineq::vec3arr::Vec3arr;
 /// use lineq::vec3arr::Vec3win;
 ///
 /// pv_value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// // the above macro instance has the same effect as the 4 below
+/// value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// value_impl! {Add;add;+; 3 &Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// value_impl! {Add;add;+; 3 Vec3win<'a>; for &Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// value_impl! {Add;add;+; 3 &Vec3win<'a>; for &Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
 /// ```
 #[macro_export]
 macro_rules! pv_value_impl {
@@ -196,6 +202,136 @@ macro_rules! pv_dot_impl {
 	};
 }
 
+/// creates an implmentation of some given operation for a given one element tuple struct.
+///
+/// This macro has three forms, marked with a 1, 2, and 3. These numbers mark in binary
+/// about whether each type on each side is an array type or a single value (1 or 0 respectively).
+/// For example for form 2, the first type mentioned, ie rhs, will be an array while the second type,
+/// ie lhs, will be a value as the binary representation is 0b10.
+///
+/// Descriptions of input variables:
+/// - imp: The name of the implmentation for the operation that you are calling.
+/// - func: The the name of the internal function for the implmentation. It may be the
+///   implmentation name but lower case, or it may be more complex.
+/// - op: The operation that is performed, if, for example, the implmentation was Add, then
+///   op would be +.
+/// - rhs: this is the type on the right hand side of the operation.
+/// - lhs: this is the type on the left hand side of the operation.
+/// - out: this is the type that results after the operation, so if you add a f32 to a f32, your
+///   output type is f32.
+/// - gen: if your your types include one, and only one, const generic in total, then this
+///    will be the name of it.
+/// - gent: if your your types include one, and only one, const generic in total, then this
+///    will be the type of that const generic.
+/// - lt: if your your types include one, and only one, lifetime in total, then this will
+///   be the name for it.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::Add;
+/// use lineq::value_impl;
+/// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3arr::Vec3win;
+///
+/// value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// // the above macro instance has the same effect as all the code below except comments
+/// impl<'a,const N: usize> Add<Vec3win<'a>> for Vec3arr<N> {
+/// 	type Output = Vec3arr<N>;
+/// 	#[inline]
+/// 	fn add(self, rhs: Vec3win<'a>) -> Vec3arr<N> {
+/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// 		// the panic message and the inclusing of the panic! alltogether depend on the mode and the inputs
+/// 		let mut tmp: Vec3arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+/// 		// the way that tmp is initialized and filled depends on the inputs to the macro
+/// 		for i in 0..N {
+/// 			tmp[i] = self[i] + rhs[i];
+/// 		}
+/// 		unsafe { std::mem::transmute::<_, Vec3arr<N>>(tmp) }
+/// 	}
+/// }
+/// ```
+///
+/// As hinted at in the example, the implmentation generated will change based on the input.
+/// The full flow chart is written in pseudo code below.
+///
+/// ```rust
+/// // if both lt and gen are given
+/// impl<$lt,const $gen: $gent> $imp<$rhs> for $lhs {
+/// // if only lt is given
+/// impl<$lt> $imp<$rhs> for $lhs {
+/// // if gen is given
+/// impl<const $gen: $gent> $imp<$rhs> for $lhs {
+/// // if neither are given
+/// impl $imp<$rhs> for $lhs {
+/// 
+/// //same for all
+/// type Output = $out;
+///
+/// //same for all
+/// #[inline]
+///
+/// //same for all
+/// fn $func(self, rhs: $rhs) -> $out { 
+///
+/// // if the mode is not equal to 3, there is no panic statement
+/// // if the mode is 3 and gen exists
+/// if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// // if the mode is 3 and gen does not exist
+/// if self.len() != rhs.len() { panic!("slices inequal length"); }
+/// 
+/// // if gen exists
+/// let mut tmp = unsafe { MaybeUninit::uninit().assume_init() };
+/// // if gen does not exist
+/// let mut tmp = $out::new_uninit_box(rhs.len());
+///
+/// // if gen exists, this unsafe opening statement does not exist
+/// // if gen does not exist
+/// let tmp = unsafe {
+///
+/// // if gen does not exist and the mode is 3 or 1
+/// for i in 0..self.len() {
+/// // if gen does not exist and the mode is 2
+/// for i in 0..rhs.len() {
+/// // if gen does exist
+/// for i in 0..$gen {
+///
+/// // if gen does not exist and mode equal 3
+/// tmp[i].as_mut_ptr().write( self[i] $op rhs[i] );
+/// // if gen does not exist and mode equal 2
+/// tmp[i].as_mut_ptr().write( self $op rhs[i] );
+/// // if gen does not exist and mode equal 1
+/// tmp[i].as_mut_ptr().write( self[i] $op rhs );
+/// // if gen does exist and mode equal 3
+/// tmp[i] = self[i] $op rhs[i];
+/// // if gen does exist and mode equal 2
+/// tmp[i] = self $op rhs[i];
+/// // if gen does exist and mode equal 1
+/// tmp[i] = self[i] $op rhs;
+/// 
+/// // same for all
+/// }
+/// 
+/// // if gen does not exist
+/// tmp.assume_init()
+/// // if gen exists
+/// unsafe { std::mem::transmute::<_, $out>(tmp) }
+///
+/// // if gen exists, the unsafe statement does not need closeing as it does not exist
+/// // if gen does not exist
+/// };
+///
+/// // if gen exists, we end up with the right type at the end, so there is no need for this line
+/// // if gen does not exist
+/// $out(tmp)
+///
+/// // same for all
+/// }
+///
+/// // same for all
+/// }
+/// ```
 #[macro_export]
 macro_rules! value_impl {
 	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
