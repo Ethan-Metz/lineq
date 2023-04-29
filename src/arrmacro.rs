@@ -1,6 +1,8 @@
 /// creates an implmentation of [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html) for a given one element tuple struct.
 ///
-/// This macro expects either an internal item that is a value ("val") or a pointer 
+/// **This macro is mostly for internal use to reduce repeated lines**
+///
+/// This macro expects either an internal item that is a value ("val") or a pointer
 /// ("ptr").
 ///
 /// Descriptions of input variables:
@@ -43,6 +45,8 @@ macro_rules! deref_impl {
 
 /// creates an implmentation of [DerefMut](https://doc.rust-lang.org/std/ops/trait.DerefMut.html) for a given one element tuple struct.
 ///
+/// **This macro is mostly for internal use to reduce repeated lines**
+///
 /// This macro expects either an internal item that is a value ("val") or a pointer 
 /// ("ptr").
 ///
@@ -83,6 +87,8 @@ macro_rules! deref_mut_impl {
 }
 
 /// creates an implmentation of some given operation for a given one element tuple struct.
+///
+/// **This macro is mostly for internal use to reduce repeated lines**
 ///
 /// This macro is a consolidation of 4 [value_impl](crate::value_impl) calls where they 
 /// go through the four possibilities for pointer or value for the two given types.
@@ -203,6 +209,8 @@ macro_rules! pv_dot_impl {
 }
 
 /// creates an implmentation of some given operation for a given one element tuple struct.
+///
+/// **This macro is mostly for internal use to reduce repeated lines**
 ///
 /// This macro has three forms, marked with a 1, 2, and 3. These numbers mark in binary
 /// about whether each type on each side is an array type or a single value (1 or 0 respectively).
@@ -332,6 +340,16 @@ macro_rules! pv_dot_impl {
 /// // same for all
 /// }
 /// ```
+///
+/// The full flow chart is far to follow, but the rational behind it is that if a constant generic
+/// is given, then the internal code with will plan to be writing to an output that has a constant
+/// generic. This is true because the library obeys a hierarchy of how structured arrays are, where
+/// fixed length arrays > boxed slices > primitive slices > raw fat pointers. When you run an operation
+/// on two array types, the library will output the type that was the most restrictive input type.
+/// For example if you add a boxed slice and a primitve slice Vec3 array (refered to as
+/// Vec3box and Vec3win respectively) then the output will be a Vec3box. Neither primative slices or
+/// raw fat pointers are given allocators, so you can not add two Vec3wins as you can not generate new
+/// Vec3wins. //TODO!
 #[macro_export]
 macro_rules! value_impl {
 	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
