@@ -1,4 +1,4 @@
-/// creates an implmentation of [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html) for a given one element tuple struct.
+/// Creates an implementation of [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html) for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
@@ -6,11 +6,11 @@
 /// ("ptr").
 ///
 /// Descriptions of input variables:
-/// - tin: the input type, this will be your outside struct type.
-/// - tout: the output type, this will be your internal type.
-/// - gen: if your struct includes one, and only one, const generic, then this will
+/// - tin: The input type, this will be your outside struct type.
+/// - tout: The output type, this will be your internal type.
+/// - gen: If your struct includes one, and only one, const generic, then this will
 ///   be the name of it.
-/// - gent: if your struct includes one, and only one, const generic, then this will
+/// - gent: If your struct includes one, and only one, const generic, then this will
 ///   be the type of that const generic.
 ///
 /// # Examples
@@ -43,7 +43,7 @@ macro_rules! deref_impl {
         };
 }
 
-/// creates an implmentation of [DerefMut](https://doc.rust-lang.org/std/ops/trait.DerefMut.html) for a given one element tuple struct.
+/// Creates an implementation of [DerefMut](https://doc.rust-lang.org/std/ops/trait.DerefMut.html) for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
@@ -51,11 +51,11 @@ macro_rules! deref_impl {
 /// ("ptr").
 ///
 /// Descriptions of input variables:
-/// - tin: the input type, this will be your outside struct type.
-/// - tout: the output type, this will be your internal type.
-/// - gen: if your struct includes one, and only one, const generic, then this will
+/// - tin: The input type, this will be your outside struct type.
+/// - tout: The output type, this will be your internal type.
+/// - gen: If your struct includes one, and only one, const generic, then this will
 ///   be the name of it.
-/// - gent: if your struct includes one, and only one, const generic, then this will
+/// - gent: If your struct includes one, and only one, const generic, then this will
 ///   be the type of that const generic.
 ///
 /// # Examples
@@ -86,11 +86,11 @@ macro_rules! deref_mut_impl {
         };
 }
 
-/// creates an implmentation of some given allocating operation for a given one element tuple struct.
+/// creates an implementation of some given allocating operation for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
-/// This macro is a consolidation of 4 [value_impl](crate::value_impl) calls where they 
+/// This macro is a consolidation of four [value_impl](crate::value_impl) calls where they 
 /// go through the four possibilities for pointer or value for the two given types.
 ///
 /// This macro has three forms, marked with a 1, 2, and 3. These numbers mark in binary
@@ -99,20 +99,20 @@ macro_rules! deref_mut_impl {
 /// ie lhs, will be a value as the binary representation is 0b10.
 ///
 /// Descriptions of input variables:
-/// - imp: The name of the implmentation for the operation that you are calling.
-/// - func: The the name of the internal function for the implmentation. It may be the
-///   implmentation name but lower case, or it may be more complex.
-/// - op: The operation that is performed, if, for example, the implmentation was Add, then
+/// - imp: The name of the implementation for the operation that you are calling.
+/// - func: The the name of the internal function for the implementation. It may be the
+///   implementation name but lower case, or it may be more complex.
+/// - op: The operation that is performed. If, for example, the implementation was Add, then
 ///   op would be +.
-/// - rhs: this is the type on the right hand side of the operation.
-/// - lhs: this is the type on the left hand side of the operation.
-/// - out: this is the type that results after the operation, so if you add a f32 to a f32, your
+/// - rhs: This is the type on the right hand side of the operation.
+/// - lhs: This is the type on the left hand side of the operation.
+/// - out: This is the type that results after the operation, so if you add a f32 to a f32, your
 ///   output type is f32.
-/// - gen: if your your types include one, and only one, const generic in total, then this
+/// - gen: If your your types include one, and only one, const generic in total, then this
 ///    will be the name of it.
-/// - gent: if your your types include one, and only one, const generic in total, then this
+/// - gent: If your your types include one, and only one, const generic in total, then this
 ///    will be the type of that const generic.
-/// - lt: if your your types include one, and only one, lifetime in total, then this will
+/// - lt: If your your types include one, and only one, lifetime in total, then this will
 ///   be the name for it.
 ///
 /// # Examples
@@ -126,7 +126,7 @@ macro_rules! deref_mut_impl {
 /// use lineq::vec3arr::Vec3win;
 ///
 /// pv_value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
-/// // the above macro instance has the same effect as the 4 below
+/// // The above macro instance has the same effect as the four below.
 /// value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
 /// value_impl! {Add;add;+; 3 &Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
 /// value_impl! {Add;add;+; 3 Vec3win<'a>; for &Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
@@ -172,29 +172,29 @@ macro_rules! pv_value_impl {
 	};
 }
 
-/// creates an implmentation of some given inplace operation for a given one element tuple struct.
+/// Creates an implementation of some given inplace operation for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
-/// This macro is a consolidation of 2 [inplace_impl](crate::inplace_impl) calls where they 
+/// This macro is a consolidation of two [inplace_impl](crate::inplace_impl) calls where they 
 /// go through the 2 possibilities for pointer or value for the given rhs.
 ///
 /// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
 /// about whether rhs is an array type or a single value (1 or 0 respectively).
 ///
 /// Descriptions of input variables:
-/// - imp: The name of the implmentation for the operation that you are calling.
-/// - func: The the name of the internal function for the implmentation. It may be the
-///   implmentation name but lower case, or it may be more complex.
-/// - op: The operation that is performed, if, for example, the implmentation was AddAssign, then
+/// - imp: The name of the implementation for the operation that you are calling.
+/// - func: The the name of the internal function for the implementation. It may be the
+///   implementation name but lower case, or it may be more complex.
+/// - op: The operation that is performed. If, for example, the implementation was AddAssign, then
 ///   op would be +=.
-/// - rhs: this is the type on the right hand side of the operation.
-/// - lhs: this is the type on the left hand side of the operation.
-/// - gen: if your your types include one, and only one, const generic in total, then this
+/// - rhs: This is the type on the right hand side of the operation.
+/// - lhs: This is the type on the left hand side of the operation.
+/// - gen: If your your types include one, and only one, const generic in total, then this
 ///    will be the name of it.
-/// - gent: if your your types include one, and only one, const generic in total, then this
+/// - gent: If your your types include one, and only one, const generic in total, then this
 ///    will be the type of that const generic.
-/// - lt: if your your types include one, and only one, lifetime in total, then this will
+/// - lt: If your your types include one, and only one, lifetime in total, then this will
 ///   be the name for it.
 ///
 /// # Examples
@@ -208,7 +208,7 @@ macro_rules! pv_value_impl {
 /// use lineq::vec3arr::Vec3win;
 ///
 /// pv_inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// // the above macro instance has the same effect as the 2 below
+/// // The above macro instance has the same effect as the two below.
 /// inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
 /// inplace_impl! {AddAssign;add_assign;+=; 1 &Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
 /// ```
@@ -232,22 +232,22 @@ macro_rules! pv_inplace_impl {
         };
 }
 
-/// creates an implmentation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
+/// Creates an implementation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
 /// ) for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
-/// This macro is a consolidation of 4 [dot_impl](crate::dot_impl) calls where they 
-/// go through the 4 possibilities for pointer or value for the given rhs and lhs.
+/// This macro is a consolidation of four [dot_impl](crate::dot_impl) calls where they 
+/// go through the four possibilities for pointer or value for the given rhs and lhs.
 ///
 /// Descriptions of input variables:
-/// - rhs: this is the type on the right hand side of the operation.
-/// - lhs: this is the type on the left hand side of the operation.
-/// - gen: if your your types include one, and only one, const generic in total, then this
+/// - rhs: This is the type on the right hand side of the operation.
+/// - lhs: This is the type on the left hand side of the operation.
+/// - gen: If your your types include one, and only one, const generic in total, then this
 ///    will be the name of it.
-/// - gent: if your your types include one, and only one, const generic in total, then this
+/// - gent: If your your types include one, and only one, const generic in total, then this
 ///    will be the type of that const generic.
-/// - lt: if your your types include one, and only one, lifetime in total, then this will
+/// - lt: If your your types include one, and only one, lifetime in total, then this will
 ///   be the name for it.
 ///
 /// # Examples
@@ -261,7 +261,7 @@ macro_rules! pv_inplace_impl {
 /// use lineq::vec3arr::Vec3win;
 ///
 /// pv_dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// // the above macro instance has the same effect as the 4 below
+/// // The above macro instance has the same effect as the four below.
 /// dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
 /// dot_impl! {Dot &Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
 /// dot_impl! {Dot Vec3win<'a>; for &Vec3arr<N>; const N: usize; <'a>}
@@ -283,7 +283,7 @@ macro_rules! pv_dot_impl {
 	};
 }
 
-/// creates an implmentation of some given allocating operation for a given one element tuple struct.
+/// Creates an implementation of some given allocating operation for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
@@ -293,20 +293,20 @@ macro_rules! pv_dot_impl {
 /// ie lhs, will be a value as the binary representation is 0b10.
 ///
 /// Descriptions of input variables:
-/// - imp: The name of the implmentation for the operation that you are calling.
-/// - func: The the name of the internal function for the implmentation. It may be the
-///   implmentation name but lower case, or it may be more complex.
-/// - op: The operation that is performed, if, for example, the implmentation was Add, then
+/// - imp: The name of the implementation for the operation that you are calling.
+/// - func: The the name of the internal function for the implementation. It may be the
+///   implementation name but lower case, or it may be more complex.
+/// - op: The operation that is performed. If, for example, the implementation was Add, then
 ///   op would be +.
-/// - rhs: this is the type on the right hand side of the operation.
-/// - lhs: this is the type on the left hand side of the operation.
-/// - out: this is the type that results after the operation, so if you add a f32 to a f32, your
+/// - rhs: This is the type on the right hand side of the operation.
+/// - lhs: This is the type on the left hand side of the operation.
+/// - out: This is the type that results after the operation, so if you add a f32 to a f32, your
 ///   output type is f32.
-/// - gen: if your your types include one, and only one, const generic in total, then this
+/// - gen: If your your types include one, and only one, const generic in total, then this
 ///    will be the name of it.
-/// - gent: if your your types include one, and only one, const generic in total, then this
+/// - gent: If your your types include one, and only one, const generic in total, then this
 ///    will be the type of that const generic.
-/// - lt: if your your types include one, and only one, lifetime in total, then this will
+/// - lt: If your your types include one, and only one, lifetime in total, then this will
 ///   be the name for it.
 ///
 /// # Examples
@@ -319,15 +319,15 @@ macro_rules! pv_dot_impl {
 /// use lineq::vec3arr::Vec3win;
 ///
 /// value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
-/// // the above macro instance has the same effect as all the code below except comments
+/// // The above macro instance has the same effect as all the code below except comments.
 /// impl<'a,const N: usize> Add<Vec3win<'a>> for Vec3arr<N> {
 /// 	type Output = Vec3arr<N>;
 /// 	#[inline]
 /// 	fn add(self, rhs: Vec3win<'a>) -> Vec3arr<N> {
 /// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// the panic message and the inclusing of the panic! alltogether depend on the mode and the inputs
+/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
 /// 		let mut tmp: Vec3arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
-/// 		// the way that tmp is initialized and filled depends on the inputs to the macro
+/// 		// The way that tmp is initialized and filled depends on the inputs to the macro.
 /// 		for i in 0..N {
 /// 			tmp[i] = self[i] + rhs[i];
 /// 		}
@@ -428,7 +428,7 @@ macro_rules! value_impl {
         };
 }
 
-/// creates an implmentation of some given inplace operation for a given one element tuple struct.
+/// Creates an implementation of some given inplace operation for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
@@ -436,18 +436,18 @@ macro_rules! value_impl {
 /// about whether rhs is an array type or a single value (1 or 0 respectively).
 ///
 /// Descriptions of input variables:
-/// - imp: The name of the implmentation for the operation that you are calling.
-/// - func: The the name of the internal function for the implmentation. It may be the
-///   implmentation name but lower case, or it may be more complex.
-/// - op: The operation that is performed, if, for example, the implmentation was AddAssign, then
+/// - imp: The name of the implementation for the operation that you are calling.
+/// - func: The the name of the internal function for the implementation. It may be the
+///   implementation name but lower case, or it may be more complex.
+/// - op: The operation that is performed. If, for example, the implementation was AddAssign, then
 ///   op would be +=.
-/// - rhs: this is the type on the right hand side of the operation.
-/// - lhs: this is the type on the left hand side of the operation.
-/// - gen: if your your types include one, and only one, const generic in total, then this
+/// - rhs: This is the type on the right hand side of the operation.
+/// - lhs: This is the type on the left hand side of the operation.
+/// - gen: If your your types include one, and only one, const generic in total, then this
 ///    will be the name of it.
-/// - gent: if your your types include one, and only one, const generic in total, then this
+/// - gent: If your your types include one, and only one, const generic in total, then this
 ///    will be the type of that const generic.
-/// - lt: if your your types include one, and only one, lifetime in total, then this will
+/// - lt: If your your types include one, and only one, lifetime in total, then this will
 ///   be the name for it.
 ///
 /// # Examples
@@ -460,15 +460,15 @@ macro_rules! value_impl {
 /// use lineq::vec3arr::Vec3win;
 ///
 /// inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// // the above macro instance has the same effect as all the code below except comments
+/// // The above macro instance has the same effect as all the code below except comments.
 /// impl<'a,const N: usize> AddAssign<Vec3win<'a>> for Vec3arr<N> {
 /// 	#[inline]
 /// 	fn add_assign(&mut self, rhs: Vec3win<'a>) {
 /// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// the panic message and the inclusing of the panic! alltogether depend on the mode and the inputs
+/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
 /// 		for i in 0..self.len() {
 /// 			self[i] += rhs[i];
-/// 			// depending on the input rhs[i] may be rhs.
+/// 			// Depending on the input rhs[i] may be rhs.
 /// 		}
 /// 	}
 /// }
@@ -519,7 +519,7 @@ macro_rules! inplace_impl {
         };
 }
 
-/// creates an implmentation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
+/// Creates an implementation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
 /// ) for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
@@ -528,13 +528,13 @@ macro_rules! inplace_impl {
 /// about whether rhs is an array type or a single value (1 or 0 respectively).
 ///
 /// Descriptions of input variables:
-/// - rhs: this is the type on the right hand side of the operation.
-/// - lhs: this is the type on the left hand side of the operation.
-/// - gen: if your your types include one, and only one, const generic in total, then this
+/// - rhs: This is the type on the right hand side of the operation.
+/// - lhs: This is the type on the left hand side of the operation.
+/// - gen: If your your types include one, and only one, const generic in total, then this
 ///    will be the name of it.
-/// - gent: if your your types include one, and only one, const generic in total, then this
+/// - gent: If your your types include one, and only one, const generic in total, then this
 ///    will be the type of that const generic.
-/// - lt: if your your types include one, and only one, lifetime in total, then this will
+/// - lt: If your your types include one, and only one, lifetime in total, then this will
 ///   be the name for it.
 ///
 /// # Examples
@@ -547,15 +547,15 @@ macro_rules! inplace_impl {
 /// use lineq::vec3arr::Vec3win;
 ///
 /// dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// // the above macro instance has the same effect as all the code below except comments
+/// // The above macro instance has the same effect as all the code below except comments.
 /// impl<'a,const N: usize> Mul<Vec3win<'a>> for Vec3arr<N> {
 /// 	type Output = [f32; N];
 /// 	#[inline]
 /// 	fn mul(self, rhs: Vec3win<'a>) -> [f32; N] {
 /// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// the panic message and the inclusing of the panic! alltogether depend on the mode and the inputs
+/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
 /// 		let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
-/// 		// the way that tmp is initialized and filled depends on the inputs to the macro
+/// 		// The way that tmp is initialized and filled depends on the inputs to the macro.
 /// 		for i in 0..N {
 /// 			tmp[i] = self[i]*rhs[i];
 /// 		}
