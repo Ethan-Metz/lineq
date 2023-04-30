@@ -283,7 +283,7 @@ macro_rules! pv_dot_impl {
 	};
 }
 
-/// creates an implmentation of some given operation for a given one element tuple struct.
+/// creates an implmentation of some given allocating operation for a given one element tuple struct.
 ///
 /// **This macro is mostly for internal use to reduce repeated lines**
 ///
@@ -428,6 +428,51 @@ macro_rules! value_impl {
         };
 }
 
+/// creates an implmentation of some given inplace operation for a given one element tuple struct.
+///
+/// **This macro is mostly for internal use to reduce repeated lines**
+///
+/// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
+/// about whether rhs is an array type or a single value (1 or 0 respectively).
+///
+/// Descriptions of input variables:
+/// - imp: The name of the implmentation for the operation that you are calling.
+/// - func: The the name of the internal function for the implmentation. It may be the
+///   implmentation name but lower case, or it may be more complex.
+/// - op: The operation that is performed, if, for example, the implmentation was AddAssign, then
+///   op would be +=.
+/// - rhs: this is the type on the right hand side of the operation.
+/// - lhs: this is the type on the left hand side of the operation.
+/// - gen: if your your types include one, and only one, const generic in total, then this
+///    will be the name of it.
+/// - gent: if your your types include one, and only one, const generic in total, then this
+///    will be the type of that const generic.
+/// - lt: if your your types include one, and only one, lifetime in total, then this will
+///   be the name for it.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::AddAssign;
+/// use lineq::inplace_impl;
+/// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3arr::Vec3win;
+///
+/// inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// // the above macro instance has the same effect as all the code below except comments
+/// impl<'a,const N: usize> AddAssign<Vec3win<'a>> for Vec3arr<N> {
+/// 	#[inline]
+/// 	fn add_assign(&mut self, rhs: Vec3win<'a>) {
+/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// 		// the panic message and the inclusing of the panic! alltogether depend on the mode and the inputs
+/// 		for i in 0..self.len() {
+/// 			self[i] += rhs[i];
+/// 			// depending on the input rhs[i] may be rhs.
+/// 		}
+/// 	}
+/// }
+/// ```
 #[macro_export]
 macro_rules! inplace_impl {
 	($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
@@ -474,6 +519,50 @@ macro_rules! inplace_impl {
         };
 }
 
+/// creates an implmentation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
+/// ) for a given one element tuple struct.
+///
+/// **This macro is mostly for internal use to reduce repeated lines**
+///
+/// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
+/// about whether rhs is an array type or a single value (1 or 0 respectively).
+///
+/// Descriptions of input variables:
+/// - rhs: this is the type on the right hand side of the operation.
+/// - lhs: this is the type on the left hand side of the operation.
+/// - gen: if your your types include one, and only one, const generic in total, then this
+///    will be the name of it.
+/// - gent: if your your types include one, and only one, const generic in total, then this
+///    will be the type of that const generic.
+/// - lt: if your your types include one, and only one, lifetime in total, then this will
+///   be the name for it.
+///
+/// # Examples
+///
+/// ```rust
+/// # extern crate lineq
+/// use std::ops::Mul;
+/// use lineq::dot_impl;
+/// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3arr::Vec3win;
+///
+/// dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// // the above macro instance has the same effect as all the code below except comments
+/// impl<'a,const N: usize> Mul<Vec3win<'a>> for Vec3arr<N> {
+/// 	type Output = [f32; N];
+/// 	#[inline]
+/// 	fn mul(self, rhs: Vec3win<'a>) -> [f32; N] {
+/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// 		// the panic message and the inclusing of the panic! alltogether depend on the mode and the inputs
+/// 		let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
+/// 		// the way that tmp is initialized and filled depends on the inputs to the macro
+/// 		for i in 0..N {
+/// 			tmp[i] = self[i]*rhs[i];
+/// 		}
+/// 		unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
+/// 	}
+/// }
+/// ```
 #[macro_export]
 macro_rules! dot_impl {
 	(Dot $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
