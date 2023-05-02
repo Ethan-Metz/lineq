@@ -1,6 +1,6 @@
 use crate::vec2::Vec2;
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Mat22 {
         pub x1 : f32,
         pub y1 : f32,
@@ -59,17 +59,6 @@ use std::fmt;
 impl fmt::Display for Mat22 {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "[[{}, {}][{}, {}]]", self.x1, self.x2, self.y1, self.y2)
-        }
-}
-
-impl fmt::Debug for Mat22 {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                f.debug_struct("Mat22")
-                .field("x1", &self.x1)
-                .field("y1", &self.y1)
-		.field("x2", &self.x2)
-		.field("y2", &self.y2)
-                .finish()
         }
 }
 
