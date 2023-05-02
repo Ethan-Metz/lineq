@@ -31,30 +31,30 @@
 /// # use lineq::deref_impl;
 /// # struct F32arr<const N: usize>([f32; N]);
 /// impl<const N: usize> Deref for F32arr<N> {
-/// 	type Target = [f32; N];
-/// 	fn deref(&self) -> &Self::Target {
-/// 		&self.0
-/// 	}
+///     type Target = [f32; N];
+///     fn deref(&self) -> &Self::Target {
+///         &self.0
+///     }
 /// }
 /// ```
 #[macro_export]
 macro_rules! deref_impl {
-        (Deref val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
-                impl$(<const $gen: $gent>)? Deref for $tin {
-                        type Target = $tout;
-                        fn deref(&self) -> &Self::Target {
-                                &self.0
-                        }
-                }
-        };
-        (Deref ptr $tin:ty; to $tout:ty) => {
-                impl Deref for $tin {
-                        type Target = $tout;
-                        fn deref(&self) -> &Self::Target {
-                                &*self.0
-                        }
-                }
-        };
+    (Deref val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
+        impl$(<const $gen: $gent>)? Deref for $tin {
+            type Target = $tout;
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+    };
+    (Deref ptr $tin:ty; to $tout:ty) => {
+        impl Deref for $tin {
+            type Target = $tout;
+            fn deref(&self) -> &Self::Target {
+                &*self.0
+            }
+        }
+    };
 }
 
 /// Creates an implementation of [DerefMut](https://doc.rust-lang.org/std/ops/trait.DerefMut.html) for a given one element tuple struct.
@@ -96,27 +96,27 @@ macro_rules! deref_impl {
 /// # struct F32arr<const N: usize>([f32; N]);
 /// # deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
 /// impl<const N: usize> DerefMut for F32arr<N> {
-/// 	fn deref_mut(&mut self) -> &mut [f32; N] {
-/// 		&mut self.0
-/// 	}
+///     fn deref_mut(&mut self) -> &mut [f32; N] {
+///         &mut self.0
+///     }
 /// }
 /// ```
 #[macro_export]
 macro_rules! deref_mut_impl {
-        (DerefMut val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
-                impl$(<const $gen: $gent>)? DerefMut for $tin {
-                        fn deref_mut(&mut self) -> &mut $tout {
-                                &mut self.0
-                        }
-                }
-        };
-        (DerefMut ptr $tin:ty; to $tout:ty) => {
-                impl DerefMut for $tin {
-                        fn deref_mut(&mut self) -> &mut $tout {
-                                &mut*self.0
-                        }
-                }
-        };
+    (DerefMut val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
+        impl$(<const $gen: $gent>)? DerefMut for $tin {
+            fn deref_mut(&mut self) -> &mut $tout {
+                &mut self.0
+            }
+        }
+    };
+    (DerefMut ptr $tin:ty; to $tout:ty) => {
+        impl DerefMut for $tin {
+            fn deref_mut(&mut self) -> &mut $tout {
+                &mut*self.0
+            }
+        }
+    };
 }
 
 /// creates an implementation of some given allocating operation for a given one element tuple struct.
@@ -196,42 +196,42 @@ macro_rules! deref_mut_impl {
 /// ```
 #[macro_export]
 macro_rules! pv_value_impl {
-	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
-		value_impl!{$imp;$func;$op; 3 $rhs; for $lhs; out: $out$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 3 &$rhs; for $lhs; out: $out$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 3 $rhs; for &$lhs; out: $out$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 3 &$rhs; for &$lhs; out: $out$(; <$lt>)?}
-	};
-	($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:tt) => {
-		value_impl!{$imp;$func;$op; 2 $rhs; for $lhs; out: $out}
-		value_impl!{$imp;$func;$op; 2 &$rhs; for $lhs; out: $out}
-		value_impl!{$imp;$func;$op; 2 $rhs; for &$lhs; out: $out}
-		value_impl!{$imp;$func;$op; 2 &$rhs; for &$lhs; out: $out}
-	};
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:tt) => {
-		value_impl!{$imp;$func;$op; 1 $rhs; for $lhs; out: $out}
-		value_impl!{$imp;$func;$op; 1 &$rhs; for $lhs; out: $out}
-		value_impl!{$imp;$func;$op; 1 $rhs; for &$lhs; out: $out}
-		value_impl!{$imp;$func;$op; 1 &$rhs; for &$lhs; out: $out}
-	};
-	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		value_impl!{$imp;$func;$op; 3 $rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 3 &$rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 3 $rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 3 &$rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-	};
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		value_impl!{$imp;$func;$op; 1 $rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 1 &$rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 1 $rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-		value_impl!{$imp;$func;$op; 1 &$rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-	};
-	($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		value_impl!{$imp;$func;$op; 2 $rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-                value_impl!{$imp;$func;$op; 2 &$rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-                value_impl!{$imp;$func;$op; 2 $rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-                value_impl!{$imp;$func;$op; 2 &$rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
-	};
+    ($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
+        value_impl!{$imp;$func;$op; 3 $rhs; for $lhs; out: $out$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 3 &$rhs; for $lhs; out: $out$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 3 $rhs; for &$lhs; out: $out$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 3 &$rhs; for &$lhs; out: $out$(; <$lt>)?}
+    };
+    ($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:tt) => {
+        value_impl!{$imp;$func;$op; 2 $rhs; for $lhs; out: $out}
+        value_impl!{$imp;$func;$op; 2 &$rhs; for $lhs; out: $out}
+        value_impl!{$imp;$func;$op; 2 $rhs; for &$lhs; out: $out}
+        value_impl!{$imp;$func;$op; 2 &$rhs; for &$lhs; out: $out}
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:tt) => {
+        value_impl!{$imp;$func;$op; 1 $rhs; for $lhs; out: $out}
+        value_impl!{$imp;$func;$op; 1 &$rhs; for $lhs; out: $out}
+        value_impl!{$imp;$func;$op; 1 $rhs; for &$lhs; out: $out}
+        value_impl!{$imp;$func;$op; 1 &$rhs; for &$lhs; out: $out}
+    };
+    ($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        value_impl!{$imp;$func;$op; 3 $rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 3 &$rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 3 $rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 3 &$rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        value_impl!{$imp;$func;$op; 1 $rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 1 &$rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 1 $rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 1 &$rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+    };
+    ($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        value_impl!{$imp;$func;$op; 2 $rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 2 &$rhs; for $lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 2 $rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+        value_impl!{$imp;$func;$op; 2 &$rhs; for &$lhs; out: $out; const $gen: $gent$(; <$lt>)?}
+    };
 }
 
 /// Creates an implementation of some given inplace operation for a given one element tuple struct.
@@ -303,22 +303,22 @@ macro_rules! pv_value_impl {
 /// ```
 #[macro_export]
 macro_rules! pv_inplace_impl {
-	($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		inplace_impl!{$imp;$func;$op; 0 $rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
-		inplace_impl!{$imp;$func;$op; 0 &$rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
-	};
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		inplace_impl!{$imp;$func;$op; 1 $rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
-                inplace_impl!{$imp;$func;$op; 1 &$rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
-	};
-	($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
-		inplace_impl!{$imp;$func;$op; 0 $rhs; for $lhs$(; <$lt>)?}
-		inplace_impl!{$imp;$func;$op; 0 &$rhs; for $lhs$(; <$lt>)?}
-	};
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
-                inplace_impl!{$imp;$func;$op; 1 $rhs; for $lhs$(; <$lt>)?}
-                inplace_impl!{$imp;$func;$op; 1 &$rhs; for $lhs$(; <$lt>)?}
-        };
+    ($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        inplace_impl!{$imp;$func;$op; 0 $rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
+        inplace_impl!{$imp;$func;$op; 0 &$rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        inplace_impl!{$imp;$func;$op; 1 $rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
+        inplace_impl!{$imp;$func;$op; 1 &$rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
+    };
+    ($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
+        inplace_impl!{$imp;$func;$op; 0 $rhs; for $lhs$(; <$lt>)?}
+        inplace_impl!{$imp;$func;$op; 0 &$rhs; for $lhs$(; <$lt>)?}
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
+        inplace_impl!{$imp;$func;$op; 1 $rhs; for $lhs$(; <$lt>)?}
+        inplace_impl!{$imp;$func;$op; 1 &$rhs; for $lhs$(; <$lt>)?}
+    };
 }
 
 /// Creates an implementation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
@@ -389,18 +389,18 @@ macro_rules! pv_inplace_impl {
 /// ```
 #[macro_export]
 macro_rules! pv_dot_impl {
-	(Dot $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
-		dot_impl!{Dot $rhs; for $lhs$(; <$lt>)?}
-		dot_impl!{Dot &$rhs; for $lhs$(; <$lt>)?}
-		dot_impl!{Dot $rhs; for &$lhs$(; <$lt>)?}
-		dot_impl!{Dot &$rhs; for &$lhs$(; <$lt>)?}
-	};
-	(Dot $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		dot_impl!{Dot $rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
-		dot_impl!{Dot &$rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
-		dot_impl!{Dot $rhs; for &$lhs; const $gen: $gent$(; <$lt>)?}
-		dot_impl!{Dot &$rhs; for &$lhs; const $gen: $gent$(; <$lt>)?}
-	};
+    (Dot $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
+        dot_impl!{Dot $rhs; for $lhs$(; <$lt>)?}
+        dot_impl!{Dot &$rhs; for $lhs$(; <$lt>)?}
+        dot_impl!{Dot $rhs; for &$lhs$(; <$lt>)?}
+        dot_impl!{Dot &$rhs; for &$lhs$(; <$lt>)?}
+    };
+    (Dot $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        dot_impl!{Dot $rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
+        dot_impl!{Dot &$rhs; for $lhs; const $gen: $gent$(; <$lt>)?}
+        dot_impl!{Dot $rhs; for &$lhs; const $gen: $gent$(; <$lt>)?}
+        dot_impl!{Dot &$rhs; for &$lhs; const $gen: $gent$(; <$lt>)?}
+    };
 }
 
 /// Creates an implementation of some given allocating operation for a given one element tuple struct.
@@ -469,111 +469,111 @@ macro_rules! pv_dot_impl {
 /// # deref_impl! {Deref val F32win<'_>; to [f32]}
 /// # deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
 /// impl<'a,const N: usize> Add<F32win<'a>> for F32arr<N> {
-/// 	type Output = F32arr<N>;
-/// 	#[inline]
-/// 	fn add(self, rhs: F32win<'a>) -> F32arr<N> {
-/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
-/// 		let mut tmp: F32arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
-/// 		// The way that tmp is initialized and filled depends on the inputs to the macro.
-/// 		for i in 0..N {
-/// 			tmp[i] = self[i] + rhs[i];
-/// 		}
-/// 		unsafe { std::mem::transmute::<_, F32arr<N>>(tmp) }
-/// 	}
+///     type Output = F32arr<N>;
+///     #[inline]
+///     fn add(self, rhs: F32win<'a>) -> F32arr<N> {
+///         if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+///         // The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
+///         let mut tmp: F32arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+///         // The way that tmp is initialized and filled depends on the inputs to the macro.
+///         for i in 0..N {
+///             tmp[i] = self[i] + rhs[i];
+///         }
+///         unsafe { std::mem::transmute::<_, F32arr<N>>(tmp) }
+///     }
 /// }
 /// ```
 #[macro_export]
 macro_rules! value_impl {
-	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
-                impl$(<$lt>)? $imp<$rhs> for $lhs {
-                        type Output = $out;
-                        #[inline]
-                        fn $func(self, rhs: $rhs) -> $out {
-                                if self.len() != rhs.len() { panic!("slices inequal length"); }
-                                let mut tmp = $out::new_uninit_box(self.len());
-                                let tmp = unsafe {
-                                        for i in 0..self.len() {
-                                                tmp[i].as_mut_ptr().write( self[i] $op rhs[i] );
-                                        }
-                                        tmp.assume_init()
-                                };
-                                $out(tmp)
-                        }
+    ($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:tt$(; <$lt:lifetime>)?) => {
+        impl$(<$lt>)? $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                if self.len() != rhs.len() { panic!("slices inequal length"); }
+                let mut tmp = $out::new_uninit_box(self.len());
+                let tmp = unsafe {
+                    for i in 0..self.len() {
+                        tmp[i].as_mut_ptr().write( self[i] $op rhs[i] );
+                    }
+                    tmp.assume_init()
+                };
+                $out(tmp)
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:tt) => {
+        impl $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                let mut tmp = $out::new_uninit_box(rhs.len());
+                let tmp = unsafe {
+                    for i in 0..rhs.len() {
+                        tmp[i].as_mut_ptr().write( self $op rhs[i] );
+                    }
+                    tmp.assume_init()
+                };
+                $out(tmp)
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:tt) => {
+        impl $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                let mut tmp = $out::new_uninit_box(self.len());
+                let tmp = unsafe {
+                    for i in 0..self.len() {
+                        tmp[i].as_mut_ptr().write( self[i] $op rhs );
+                    }
+                    tmp.assume_init()
+                };
+                $out(tmp)
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+                let mut tmp: $out = unsafe { MaybeUninit::uninit().assume_init() };
+                for i in 0..$gen {
+                    tmp[i] = self[i] $op rhs[i];
                 }
-        };
-	($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:tt) => {
-                impl $imp<$rhs> for $lhs {
-                        type Output = $out;
-                        #[inline]
-                        fn $func(self, rhs: $rhs) -> $out {
-                                let mut tmp = $out::new_uninit_box(rhs.len());
-                                let tmp = unsafe {
-                                        for i in 0..rhs.len() {
-                                                tmp[i].as_mut_ptr().write( self $op rhs[i] );
-                                        }
-                                        tmp.assume_init()
-                                };
-                                $out(tmp)
-                        }
+                unsafe { std::mem::transmute::<_, $out>(tmp) }
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                let mut tmp: $out = unsafe { MaybeUninit::uninit().assume_init() };
+                for i in 0..$gen {
+                    tmp[i] = self[i] $op rhs;
                 }
-        };
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:tt) => {
-                impl $imp<$rhs> for $lhs {
-                        type Output = $out;
-                        #[inline]
-                        fn $func(self, rhs: $rhs) -> $out {
-                                let mut tmp = $out::new_uninit_box(self.len());
-                                let tmp = unsafe {
-                                        for i in 0..self.len() {
-                                                tmp[i].as_mut_ptr().write( self[i] $op rhs );
-                                        }
-                                        tmp.assume_init()
-                                };
-                                $out(tmp)
-                        }
+                unsafe { std::mem::transmute::<_, $out>(tmp) }
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                let mut tmp: $out = unsafe { MaybeUninit::uninit().assume_init() };
+                for i in 0..$gen {
+                    tmp[i] = self $op rhs[i];
                 }
-        };
-	($imp:ident;$func:ident;$op:tt; 3 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-                impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
-                        type Output = $out;
-			#[inline]
-                        fn $func(self, rhs: $rhs) -> $out {
-				if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-                                let mut tmp: $out = unsafe { MaybeUninit::uninit().assume_init() };
-                                for i in 0..$gen {
-					tmp[i] = self[i] $op rhs[i];
-                                }
-                                unsafe { std::mem::transmute::<_, $out>(tmp) }
-                        }
-                }
-        };
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-                impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
-                        type Output = $out;
-                        #[inline]
-                        fn $func(self, rhs: $rhs) -> $out {
-                                let mut tmp: $out = unsafe { MaybeUninit::uninit().assume_init() };
-                                for i in 0..$gen {
-                                        tmp[i] = self[i] $op rhs;
-                                }
-                                unsafe { std::mem::transmute::<_, $out>(tmp) }
-                        }
-                }
-        };
-	($imp:ident;$func:ident;$op:tt; 2 $rhs:ty; for $lhs:ty; out: $out:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-                impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
-                        type Output = $out;
-                        #[inline]
-                        fn $func(self, rhs: $rhs) -> $out {
-                                let mut tmp: $out = unsafe { MaybeUninit::uninit().assume_init() };
-                                for i in 0..$gen {
-                                        tmp[i] = self $op rhs[i];
-                                }
-                                unsafe { std::mem::transmute::<_, $out>(tmp) }
-                        }
-                }
-        };
+                unsafe { std::mem::transmute::<_, $out>(tmp) }
+            }
+        }
+    };
 }
 
 /// Creates an implementation of some given inplace operation for a given one element tuple struct.
@@ -636,61 +636,61 @@ macro_rules! value_impl {
 /// # deref_impl! {Deref val F32win<'_>; to [f32]}
 /// # deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
 /// impl<'a,const N: usize> AddAssign<F32win<'a>> for F32arr<N> {
-/// 	#[inline]
-/// 	fn add_assign(&mut self, rhs: F32win<'a>) {
-/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
-/// 		for i in 0..self.len() {
-/// 			self[i] += rhs[i];
-/// 			// Depending on the input rhs[i] may be rhs.
-/// 		}
-/// 	}
+///     #[inline]
+///     fn add_assign(&mut self, rhs: F32win<'a>) {
+///         if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+///         // The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
+///         for i in 0..self.len() {
+///             self[i] += rhs[i];
+///             // Depending on the input rhs[i] may be rhs.
+///         }
+///     }
 /// }
 /// ```
 #[macro_export]
 macro_rules! inplace_impl {
-	($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-		impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
-			#[inline]
-        		fn $func(&mut self, rhs: $rhs) {
-                		for i in 0..self.len() {
-                        		self[i] $op rhs;
-                		}
-        		}
-		}
-	};
-	($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-                impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
-			#[inline]
-                        fn $func(&mut self, rhs: $rhs) {
-                                if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-                                for i in 0..self.len() {
-                                        self[i] $op rhs[i];
-                                }
-                        }
+    ($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
+            #[inline]
+            fn $func(&mut self, rhs: $rhs) {
+                for i in 0..self.len() {
+                    self[i] $op rhs;
                 }
-        };
-	($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
-                impl$(<$lt>)? $imp<$rhs> for $lhs {
-			#[inline]
-                        fn $func(&mut self, rhs: $rhs) {
-                                for i in 0..self.len() {
-                                        self[i] $op rhs;
-                                }
-                        }
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        impl<$($lt,)?const $gen: $gent> $imp<$rhs> for $lhs {
+            #[inline]
+            fn $func(&mut self, rhs: $rhs) {
+                if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+                for i in 0..self.len() {
+                    self[i] $op rhs[i];
                 }
-        };
-        ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
-                impl$(<$lt>)? $imp<$rhs> for $lhs {
-			#[inline]
-                        fn $func(&mut self, rhs: $rhs) {
-				if self.len() != rhs.len() { panic!("slices inequal length"); }
-                                for i in 0..self.len() {
-                                        self[i] $op rhs[i];
-                                }
-                        }
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 0 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
+        impl$(<$lt>)? $imp<$rhs> for $lhs {
+            #[inline]
+            fn $func(&mut self, rhs: $rhs) {
+                for i in 0..self.len() {
+                    self[i] $op rhs;
                 }
-        };
+            }
+        }
+    };
+    ($imp:ident;$func:ident;$op:tt; 1 $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
+        impl$(<$lt>)? $imp<$rhs> for $lhs {
+            #[inline]
+            fn $func(&mut self, rhs: $rhs) {
+                if self.len() != rhs.len() { panic!("slices inequal length"); }
+                for i in 0..self.len() {
+                    self[i] $op rhs[i];
+                }
+            }
+        }
+    };
 }
 
 /// Creates an implementation of a dot product (i.e. [Mul](https://doc.rust-lang.org/std/ops/trait.Mul.html)
@@ -753,51 +753,51 @@ macro_rules! inplace_impl {
 /// # deref_impl! {Deref val V3win<'_>; to [Vec3]}
 /// # deref_mut_impl! {DerefMut val V3win<'_>; to [Vec3]}
 /// impl<'a,const N: usize> Mul<V3win<'a>> for V3arr<N> {
-/// 	type Output = [f32; N];
-/// 	#[inline]
-/// 	fn mul(self, rhs: V3win<'a>) -> [f32; N] {
-/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
-/// 		let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
-/// 		// The way that tmp is initialized and filled depends on the inputs to the macro.
-/// 		for i in 0..N {
-/// 			tmp[i] = self[i]*rhs[i];
-/// 		}
-/// 		unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
-/// 	}
+///     type Output = [f32; N];
+///     #[inline]
+///     fn mul(self, rhs: V3win<'a>) -> [f32; N] {
+///         if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+///         // The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
+///         let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
+///         // The way that tmp is initialized and filled depends on the inputs to the macro.
+///         for i in 0..N {
+///             tmp[i] = self[i]*rhs[i];
+///         }
+///         unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
+///     }
 /// }
 /// ```
 #[macro_export]
 macro_rules! dot_impl {
-	(Dot $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
-                impl$(<$lt>)? Mul<$rhs> for $lhs {
-                        type Output = Box<[f32]>;
-                        #[inline]
-                        fn mul(self, rhs: $rhs) -> Box<[f32]> {
-                                if self.len() != rhs.len() { panic!("slices inequal length"); }
-                                let mut tmp = Box::<[f32]>::new_uninit_slice(self.len());
-                                let tmp = unsafe {
-                                        for i in 0..self.len() {
-                                                tmp[i].as_mut_ptr().write(self[i]*rhs[i]);
-                                        }
-                                        tmp.assume_init()
-                                };
-                                tmp
-                        }
+    (Dot $rhs:ty; for $lhs:ty$(; <$lt:lifetime>)?) => {
+        impl$(<$lt>)? Mul<$rhs> for $lhs {
+            type Output = Box<[f32]>;
+            #[inline]
+            fn mul(self, rhs: $rhs) -> Box<[f32]> {
+                if self.len() != rhs.len() { panic!("slices inequal length"); }
+                let mut tmp = Box::<[f32]>::new_uninit_slice(self.len());
+                let tmp = unsafe {
+                    for i in 0..self.len() {
+                        tmp[i].as_mut_ptr().write(self[i]*rhs[i]);
+                    }
+                    tmp.assume_init()
+                };
+                tmp
+            }
+        }
+    };
+    (Dot $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
+        impl<$($lt,)?const $gen: $gent> Mul<$rhs> for $lhs {
+            type Output = [f32; N];
+            #[inline]
+            fn mul(self, rhs: $rhs) -> [f32; N] {
+                if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+                let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
+                for i in 0..$gen {
+                    tmp[i] = self[i]*rhs[i];
                 }
-        };
-	(Dot $rhs:ty; for $lhs:ty; const $gen:ident: $gent:ty$(; <$lt:lifetime>)?) => {
-                impl<$($lt,)?const $gen: $gent> Mul<$rhs> for $lhs {
-                        type Output = [f32; N];
-                        #[inline]
-                        fn mul(self, rhs: $rhs) -> [f32; N] {
-                                if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-                                let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
-                                for i in 0..$gen {
-                                        tmp[i] = self[i]*rhs[i];
-                                }
-                                unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
-                        }
-                }
-        };
+                unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
+            }
+        }
+    };
 }
