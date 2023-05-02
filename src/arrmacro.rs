@@ -24,6 +24,19 @@
 ///
 /// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
 /// ```
+/// The above macro instance has the same effect as the code below besides comments:
+/// ```rust
+/// # extern crate lineq;
+/// # use std::ops::Deref;
+/// # use lineq::deref_impl;
+/// # struct F32arr<const N: usize>([f32; N]);
+/// impl<const N: usize> Deref for F32arr<N> {
+/// 	type Target = [f32; N];
+/// 	fn deref(&self) -> &Self::Target {
+/// 		&self.0
+/// 	}
+/// }
+/// ```
 #[macro_export]
 macro_rules! deref_impl {
         (Deref val $tin:ty; to $tout:ty$(; const $gen:ident: $gent:ty)?) => {
