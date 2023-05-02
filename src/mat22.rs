@@ -1,6 +1,6 @@
 use crate::vec2::Vec2;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Mat22 {
         pub x1 : f32,
         pub y1 : f32,
