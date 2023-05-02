@@ -23,10 +23,20 @@ Arrays of vectors can be used to parallelize arithmetic:
 use lineq::vec3::Vec3;
 use lineq::vec3arr::Vec3arr;
 //using a and b from last example:
-let ab : Vec3arr = Vec3arr([a,b]);
-let cd : Vec3arr = Vec3arr([Vec3::DOWN,Vec3::RIGHT]);
+let ab : Vec3arr<2> = Vec3arr([a,b]);
+let cd : Vec3arr<2> = Vec3arr([Vec3::DOWN,Vec3::RIGHT]);
 assert_eq!(ab + cd, Vec3arr([Vec3::ZERO,Vec3::ZERO]));
 ```
+
+When adding arrays, the resulting type is deturmined by 
+how structured the type is, so for example from most
+structured to least structured we have Vec3arr, then
+Vec3box, then Vec3win, then finally Vec3raw.
+
+Only Vec2arr/Vec3arr and Vec2box/Vec3box have allocators,
+so when performing an operation that allocates (like +, -,
+*, /) one of the types needs to be a Vec2arr/Vec3arr or 
+Vec2box/Vec3box.
 
 Matricies are indexed like x1, y2, z3 ... where x, y, z
 are the rows and 1, 2, 3 are the columns:
@@ -39,6 +49,6 @@ let m1 : Mat33 = Mat33::augment(a,b,c);
 let m2 : Mat33 = Mat33{
 x1: 0.0, x2: -1.0, x3: 1.0,
 y1: 1.0, y2: 0.0, y3: -1.0,
-z1: 0.0, z2: 0.0, z3: 2.0 }
+z1: 0.0, z2: 0.0, z3: 2.0 };
 assert_eq!(m1,m2);
 ```
