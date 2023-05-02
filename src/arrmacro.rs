@@ -20,6 +20,7 @@
 /// use std::ops::Deref;
 /// use lineq::deref_impl;
 /// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3::Vec3;
 ///
 /// deref_impl! {Deref val Vec3arr<N>; to [Vec3; N]; const N: usize}
 /// ```
@@ -65,6 +66,7 @@ macro_rules! deref_impl {
 /// use std::ops::DerefMut;
 /// use lineq::deref_mut_impl;
 /// use lineq::vec3arr::Vec3arr;
+/// use lineq::vec3::Vec3;
 ///
 /// deref_mut_impl! {DerefMut val Vec3arr<N>; to [Vec3; N]; const N: usize}
 /// ```
@@ -120,6 +122,7 @@ macro_rules! deref_mut_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Add;
+/// use std::mem::MaybeUninit;
 /// use lineq::pv_value_impl;
 /// use lineq::value_impl;
 /// use lineq::vec3arr::Vec3arr;
@@ -255,6 +258,7 @@ macro_rules! pv_inplace_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Mul;
+/// use std::mem::MaybeUninit;
 /// use lineq::pv_dot_impl;
 /// use lineq::dot_impl;
 /// use lineq::vec3arr::Vec3arr;
@@ -314,6 +318,7 @@ macro_rules! pv_dot_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Add;
+/// use std::mem::MaybeUninit;
 /// use lineq::value_impl;
 /// use lineq::vec3arr::Vec3arr;
 /// use lineq::vec3arr::Vec3win;
@@ -542,6 +547,7 @@ macro_rules! inplace_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Mul;
+/// use std::mem::MaybeUninit;
 /// use lineq::dot_impl;
 /// use lineq::vec3arr::Vec3arr;
 /// use lineq::vec3arr::Vec3win;
