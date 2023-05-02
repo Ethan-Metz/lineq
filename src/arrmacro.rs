@@ -16,7 +16,7 @@
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::Deref;
 /// use lineq::deref_impl;
 /// use lineq::vec3arr::Vec3arr;
@@ -61,7 +61,7 @@ macro_rules! deref_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::DerefMut;
 /// use lineq::deref_mut_impl;
 /// use lineq::vec3arr::Vec3arr;
@@ -118,7 +118,7 @@ macro_rules! deref_mut_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::Add;
 /// use lineq::pv_value_impl;
 /// use lineq::value_impl;
@@ -200,7 +200,7 @@ macro_rules! pv_value_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::AddAssign;
 /// use lineq::pv_inplace_impl;
 /// use lineq::inplace_impl;
@@ -253,7 +253,7 @@ macro_rules! pv_inplace_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::Mul;
 /// use lineq::pv_dot_impl;
 /// use lineq::dot_impl;
@@ -312,7 +312,7 @@ macro_rules! pv_dot_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::Add;
 /// use lineq::value_impl;
 /// use lineq::vec3arr::Vec3arr;
@@ -453,7 +453,7 @@ macro_rules! value_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::AddAssign;
 /// use lineq::inplace_impl;
 /// use lineq::vec3arr::Vec3arr;
@@ -540,7 +540,7 @@ macro_rules! inplace_impl {
 /// # Examples
 ///
 /// ```rust
-/// # extern crate lineq
+/// # extern crate lineq;
 /// use std::ops::Mul;
 /// use lineq::dot_impl;
 /// use lineq::vec3arr::Vec3arr;
