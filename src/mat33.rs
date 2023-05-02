@@ -1,6 +1,6 @@
 use crate::vec3::Vec3;
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Mat33 {
         pub x1 : f32,
         pub y1 : f32,
@@ -68,22 +68,6 @@ use std::fmt;
 impl fmt::Display for Mat33 {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "[[{}, {}, {}][{}, {}, {}][{}, {}, {}]]", self.x1, self.x2, self.x3, self.y1, self.y2, self.y3, self.z1, self.z2, self.z3)
-        }
-}
-
-impl fmt::Debug for Mat33 {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                f.debug_struct("Mat33")
-                .field("x1", &self.x1)
-		.field("y1", &self.y1)
-		.field("z1", &self.z1)
-		.field("x2", &self.x2)
-		.field("y2", &self.y2)
-		.field("z2", &self.z2)
-		.field("x3", &self.x3)
-		.field("y3", &self.y3)
-		.field("z3", &self.z3)
-                .finish()
         }
 }
 
