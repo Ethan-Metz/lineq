@@ -125,12 +125,22 @@ macro_rules! deref_mut_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Add;
+/// # use std::ops::Deref;
+/// use std::ops::DerefMut;
 /// use std::mem::MaybeUninit;
+/// # use lineq::deref_impl;
+/// use lineq::deref_mut_impl;
 /// use lineq::pv_value_impl;
 /// use lineq::value_impl;
 ///
 /// struct F32arr<const N: usize>([f32; N]);
 /// struct F32win<'a>(&'a mut [f32]);
+///
+/// # deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+///
+/// # deref_impl! {Deref val F32win<'_>; to [f32]}
+/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
 ///
 /// pv_value_impl! {Add;add;+; 3 F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
 ///
