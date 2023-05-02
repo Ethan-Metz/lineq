@@ -27,8 +27,8 @@
 //! //using a and b from last example:
 //! # let a : Vec3 = Vec3::UP;
 //! # let b : Vec3 = Vec3::LEFT;
-//! let ab : Vec3arr = Vec3arr([a,b]);
-//! let cd : Vec3arr = Vec3arr([Vec3::DOWN,Vec3::RIGHT]);
+//! let ab : Vec3arr<N> = Vec3arr([a,b]);
+//! let cd : Vec3arr<N> = Vec3arr([Vec3::DOWN,Vec3::RIGHT]);
 //! assert_eq!(ab + cd, Vec3arr([Vec3::ZERO,Vec3::ZERO]));
 //! ```
 //!
@@ -56,7 +56,7 @@
 //! let m2 : Mat33 = Mat33{
 //! x1: 0.0, x2: -1.0, x3: 1.0,
 //! y1: 1.0, y2: 0.0, y3: -1.0,
-//! z1: 0.0, z2: 0.0, z3: 2.0 }
+//! z1: 0.0, z2: 0.0, z3: 2.0 };
 //! assert_eq!(m1,m2);
 //! ```
 
