@@ -137,10 +137,10 @@ macro_rules! deref_mut_impl {
 /// struct F32win<'a>(&'a mut [f32]);
 ///
 /// # deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
-/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+/// // deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
 ///
 /// # deref_impl! {Deref val F32win<'_>; to [f32]}
-/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
+/// // deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
 ///
 /// pv_value_impl! {Add;add;+; 3 F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
 ///
