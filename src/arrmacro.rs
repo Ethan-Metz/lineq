@@ -128,15 +128,20 @@ macro_rules! deref_mut_impl {
 /// use std::mem::MaybeUninit;
 /// use lineq::pv_value_impl;
 /// use lineq::value_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3arr::Vec3win;
 ///
-/// pv_value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// struct F32arr<const N: usize>([f32; N]);
+/// struct F32win<'a>(&'a mut [f32]);
+///
+/// {
+/// 	pv_value_impl! {Add;add;+; 3 F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
+/// }
 /// // The above macro instance has the same effect as the four below.
-/// value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
-/// value_impl! {Add;add;+; 3 &Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
-/// value_impl! {Add;add;+; 3 Vec3win<'a>; for &Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
-/// value_impl! {Add;add;+; 3 &Vec3win<'a>; for &Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// {
+/// 	value_impl! {Add;add;+; 3 F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
+/// 	value_impl! {Add;add;+; 3 &F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
+/// 	value_impl! {Add;add;+; 3 F32win<'a>; for &F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
+/// 	value_impl! {Add;add;+; 3 &F32win<'a>; for &F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
+/// }
 /// ```
 #[macro_export]
 macro_rules! pv_value_impl {
