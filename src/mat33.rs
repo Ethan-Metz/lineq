@@ -1,6 +1,6 @@
 use crate::vec3::Vec3;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Mat33 {
         pub x1 : f32,
         pub y1 : f32,
