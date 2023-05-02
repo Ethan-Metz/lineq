@@ -19,10 +19,10 @@
 /// # extern crate lineq;
 /// use std::ops::Deref;
 /// use lineq::deref_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3::Vec3;
 ///
-/// deref_impl! {Deref val Vec3arr<N>; to [Vec3; N]; const N: usize}
+/// struct f32arr<const N: usize>([f32; N]);
+///
+/// deref_impl! {Deref val f32arr<N>; to [f32; N]; const N: usize}
 /// ```
 #[macro_export]
 macro_rules! deref_impl {
