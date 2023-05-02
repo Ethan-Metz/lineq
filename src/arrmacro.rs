@@ -20,9 +20,9 @@
 /// use std::ops::Deref;
 /// use lineq::deref_impl;
 ///
-/// struct f32arr<const N: usize>([f32; N]);
+/// struct F32arr<const N: usize>([f32; N]);
 ///
-/// deref_impl! {Deref val f32arr<N>; to [f32; N]; const N: usize}
+/// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
 /// ```
 #[macro_export]
 macro_rules! deref_impl {
@@ -63,12 +63,15 @@ macro_rules! deref_impl {
 ///
 /// ```rust
 /// # extern crate lineq;
+/// # use std::ops::Deref;
+/// # use lineq::deref_impl;
 /// use std::ops::DerefMut;
 /// use lineq::deref_mut_impl;
 ///
-/// struct f32arr<const N: usize>([f32; N]);
+/// struct F32arr<const N: usize>([f32; N]);
 ///
-/// deref_mut_impl! {DerefMut val f32arr<N>; to [f32; N]; const N: usize}
+/// # deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
 /// ```
 #[macro_export]
 macro_rules! deref_mut_impl {
