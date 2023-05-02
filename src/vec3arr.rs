@@ -12,16 +12,16 @@ use ::pv_value_impl;
 use ::pv_inplace_impl;
 use ::pv_dot_impl;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3arr<const N: usize>(pub [Vec3; N]);
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Vec3box(pub Box<[Vec3]>);
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Vec3win<'a>(pub &'a mut [Vec3]);
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Vec3raw(pub *mut [Vec3]);
 
 macro_rules! disp_impl {
