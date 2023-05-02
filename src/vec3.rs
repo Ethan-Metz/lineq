@@ -1,4 +1,4 @@
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3 {
         pub x : f32,
         pub y : f32,
@@ -100,16 +100,6 @@ use std::fmt;
 impl fmt::Display for Vec3 {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "<{}, {}, {}>", self.x, self.y, self.z)
-        }
-}
-
-impl fmt::Debug for Vec3 {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                f.debug_struct("Vec3")
-                .field("x", &self.x)
-                .field("y", &self.y)
-                .field("z", &self.z)
-                .finish()
         }
 }
 
