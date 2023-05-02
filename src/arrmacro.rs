@@ -125,10 +125,10 @@ macro_rules! deref_mut_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Add;
-/// # use std::ops::Deref;
+/// use std::ops::Deref;
 /// use std::ops::DerefMut;
 /// use std::mem::MaybeUninit;
-/// # use lineq::deref_impl;
+/// use lineq::deref_impl;
 /// use lineq::deref_mut_impl;
 /// use lineq::pv_value_impl;
 /// use lineq::value_impl;
@@ -136,11 +136,11 @@ macro_rules! deref_mut_impl {
 /// struct F32arr<const N: usize>([f32; N]);
 /// struct F32win<'a>(&'a mut [f32]);
 ///
-/// # deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
-/// // deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
 ///
-/// # deref_impl! {Deref val F32win<'_>; to [f32]}
-/// // deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
+/// deref_impl! {Deref val F32win<'_>; to [f32]}
+/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
 ///
 /// pv_value_impl! {Add;add;+; 3 F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
 ///
@@ -220,15 +220,27 @@ macro_rules! pv_value_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::AddAssign;
+/// use std::ops::Deref;
+/// use std::ops::DerefMut;
+/// use lineq::deref_impl;
+/// use lineq::deref_mut_impl;
 /// use lineq::pv_inplace_impl;
 /// use lineq::inplace_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3arr::Vec3win;
 ///
-/// pv_inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// struct F32arr<const N: usize>([f32; N]);
+/// struct F32win<'a>(&'a mut [f32]);
+///
+/// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+///
+/// deref_impl! {Deref val F32win<'_>; to [f32]}
+/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
+///
+/// pv_inplace_impl! {AddAssign;add_assign;+=; 1 F32win<'a>; for F32arr<N>; const N: usize; <'a>}
+///
 /// // The above macro instance has the same effect as the two below.
-/// inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// inplace_impl! {AddAssign;add_assign;+=; 1 &Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// // inplace_impl! {AddAssign;add_assign;+=; 1 F32win<'a>; for F32arr<N>; const N: usize; <'a>}
+/// // inplace_impl! {AddAssign;add_assign;+=; 1 &F32win<'a>; for F32arr<N>; const N: usize; <'a>}
 /// ```
 #[macro_export]
 macro_rules! pv_inplace_impl {
@@ -273,18 +285,29 @@ macro_rules! pv_inplace_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Mul;
+/// use std::ops::Deref;
+/// use std::ops::DerefMut;
 /// use std::mem::MaybeUninit;
+/// use lineq::deref_impl;
+/// use lineq::deref_mut_impl;
 /// use lineq::pv_dot_impl;
 /// use lineq::dot_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3arr::Vec3win;
 ///
-/// pv_dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// struct F32arr<const N: usize>([f32; N]);
+/// struct F32win<'a>(&'a mut [f32]);
+///
+/// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+///
+/// deref_impl! {Deref val F32win<'_>; to [f32]}
+/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
+///
+/// pv_dot_impl! {Dot F32win<'a>; for F32arr<N>; const N: usize; <'a>}
 /// // The above macro instance has the same effect as the four below.
-/// dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// dot_impl! {Dot &Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
-/// dot_impl! {Dot Vec3win<'a>; for &Vec3arr<N>; const N: usize; <'a>}
-/// dot_impl! {Dot &Vec3win<'a>; for &Vec3arr<N>; const N: usize; <'a>}
+/// // dot_impl! {Dot F32win<'a>; for F32arr<N>; const N: usize; <'a>}
+/// // dot_impl! {Dot &F32win<'a>; for F32arr<N>; const N: usize; <'a>}
+/// // dot_impl! {Dot F32win<'a>; for &F32arr<N>; const N: usize; <'a>}
+/// // dot_impl! {Dot &F32win<'a>; for &F32arr<N>; const N: usize; <'a>}
 /// ```
 #[macro_export]
 macro_rules! pv_dot_impl {
@@ -333,27 +356,38 @@ macro_rules! pv_dot_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Add;
+/// use std::ops::Deref;
+/// use std::ops::DerefMut;
 /// use std::mem::MaybeUninit;
+/// use lineq::deref_impl;
+/// use lineq::deref_mut_impl;
 /// use lineq::value_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3arr::Vec3win;
 ///
-/// value_impl! {Add;add;+; 3 Vec3win<'a>; for Vec3arr<N>; out: Vec3arr<N>; const N: usize; <'a>}
+/// struct F32arr<const N: usize>([f32; N]);
+/// struct F32win<'a>(&'a mut [f32]);
+///
+/// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+///
+/// deref_impl! {Deref val F32win<'_>; to [f32]}
+/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
+///
+/// value_impl! {Add;add;+; 3 F32win<'a>; for F32arr<N>; out: F32arr<N>; const N: usize; <'a>}
 /// // The above macro instance has the same effect as all the code below except comments.
-/// impl<'a,const N: usize> Add<Vec3win<'a>> for Vec3arr<N> {
-/// 	type Output = Vec3arr<N>;
-/// 	#[inline]
-/// 	fn add(self, rhs: Vec3win<'a>) -> Vec3arr<N> {
-/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
-/// 		let mut tmp: Vec3arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
-/// 		// The way that tmp is initialized and filled depends on the inputs to the macro.
-/// 		for i in 0..N {
-/// 			tmp[i] = self[i] + rhs[i];
-/// 		}
-/// 		unsafe { std::mem::transmute::<_, Vec3arr<N>>(tmp) }
-/// 	}
-/// }
+/// // impl<'a,const N: usize> Add<F32win<'a>> for F32arr<N> {
+/// // 	type Output = F32arr<N>;
+/// // 	#[inline]
+/// // 	fn add(self, rhs: F32win<'a>) -> F32arr<N> {
+/// // 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// // 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
+/// // 		let mut tmp: F32arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+/// // 		// The way that tmp is initialized and filled depends on the inputs to the macro.
+/// // 		for i in 0..N {
+/// // 			tmp[i] = self[i] + rhs[i];
+/// // 		}
+/// // 		unsafe { std::mem::transmute::<_, F32arr<N>>(tmp) }
+/// // 	}
+/// // }
 /// ```
 #[macro_export]
 macro_rules! value_impl {
@@ -475,23 +509,34 @@ macro_rules! value_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::AddAssign;
+/// use std::ops::Deref;
+/// use std::ops::DerefMut;
+/// use lineq::deref_impl;
+/// use lineq::deref_mut_impl;
 /// use lineq::inplace_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3arr::Vec3win;
 ///
-/// inplace_impl! {AddAssign;add_assign;+=; 1 Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// struct F32arr<const N: usize>([f32; N]);
+/// struct F32win<'a>(&'a mut [f32]);
+///
+/// deref_impl! {Deref val F32arr<N>; to [f32; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val F32arr<N>; to [f32; N]; const N: usize}
+///
+/// deref_impl! {Deref val F32win<'_>; to [f32]}
+/// deref_mut_impl! {DerefMut val F32win<'_>; to [f32]}
+///
+/// inplace_impl! {AddAssign;add_assign;+=; 1 F32win<'a>; for F32arr<N>; const N: usize; <'a>}
 /// // The above macro instance has the same effect as all the code below except comments.
-/// impl<'a,const N: usize> AddAssign<Vec3win<'a>> for Vec3arr<N> {
-/// 	#[inline]
-/// 	fn add_assign(&mut self, rhs: Vec3win<'a>) {
-/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
-/// 		for i in 0..self.len() {
-/// 			self[i] += rhs[i];
-/// 			// Depending on the input rhs[i] may be rhs.
-/// 		}
-/// 	}
-/// }
+/// // impl<'a,const N: usize> AddAssign<F32win<'a>> for F32arr<N> {
+/// // 	#[inline]
+/// // 	fn add_assign(&mut self, rhs: F32win<'a>) {
+/// // 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// // 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
+/// // 		for i in 0..self.len() {
+/// // 			self[i] += rhs[i];
+/// // 			// Depending on the input rhs[i] may be rhs.
+/// // 		}
+/// // 	}
+/// // }
 /// ```
 #[macro_export]
 macro_rules! inplace_impl {
@@ -562,27 +607,39 @@ macro_rules! inplace_impl {
 /// ```rust
 /// # extern crate lineq;
 /// use std::ops::Mul;
+/// use std::ops::Deref;
+/// use std::ops::DerefMut;
 /// use std::mem::MaybeUninit;
+/// use lineq::vec3::Vec3;
+/// use lineq::deref_impl;
+/// use lineq::deref_mut_impl;
 /// use lineq::dot_impl;
-/// use lineq::vec3arr::Vec3arr;
-/// use lineq::vec3arr::Vec3win;
 ///
-/// dot_impl! {Dot Vec3win<'a>; for Vec3arr<N>; const N: usize; <'a>}
+/// struct V3arr<const N: usize>([Vec3; N]);
+/// struct V3win<'a>(&'a mut [Vec3]);
+///
+/// deref_impl! {Deref val V3arr<N>; to [Vec3; N]; const N: usize}
+/// deref_mut_impl! {DerefMut val V3arr<N>; to [Vec3; N]; const N: usize}
+///
+/// deref_impl! {Deref val V3win<'_>; to [Vec3]}
+/// deref_mut_impl! {DerefMut val V3win<'_>; to [Vec3]}
+///
+/// dot_impl! {Dot V3win<'a>; for V3arr<N>; const N: usize; <'a>}
 /// // The above macro instance has the same effect as all the code below except comments.
-/// impl<'a,const N: usize> Mul<Vec3win<'a>> for Vec3arr<N> {
-/// 	type Output = [f32; N];
-/// 	#[inline]
-/// 	fn mul(self, rhs: Vec3win<'a>) -> [f32; N] {
-/// 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
-/// 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
-/// 		let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
-/// 		// The way that tmp is initialized and filled depends on the inputs to the macro.
-/// 		for i in 0..N {
-/// 			tmp[i] = self[i]*rhs[i];
-/// 		}
-/// 		unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
-/// 	}
-/// }
+/// // impl<'a,const N: usize> Mul<V3win<'a>> for V3arr<N> {
+/// // 	type Output = [f32; N];
+/// // 	#[inline]
+/// // 	fn mul(self, rhs: V3win<'a>) -> [f32; N] {
+/// // 		if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+/// // 		// The panic message and the inclusing of the panic! alltogether depend on the mode and the inputs.
+/// // 		let mut tmp: [f32; N] = unsafe { MaybeUninit::uninit().assume_init() };
+/// // 		// The way that tmp is initialized and filled depends on the inputs to the macro.
+/// // 		for i in 0..N {
+/// // 			tmp[i] = self[i]*rhs[i];
+/// // 		}
+/// // 		unsafe { std::mem::transmute::<_, [f32; N]>(tmp) }
+/// // 	}
+/// // }
 /// ```
 #[macro_export]
 macro_rules! dot_impl {
