@@ -7,8 +7,8 @@
 //! - Structs for handling arrays of vectors with different types of memory orginization, like
 //!   [Vec3arr](crate::vec3arr::Vec3arr) and [Vec3box](crate::vec3arr::Vec3box), for fixed length
 //!   arrays and boxed arrays respectively.
-//! - Structs for handling square matricies like [Mat22](crate::mat22::Mat22) and
-//!   [Mat33](crate::mat33::Mat33).
+//! - Structs for handling square matricies like [Mat22](crate::mat::Mat22) and
+//!   [Mat33](crate::mat::Mat33).
 //!
 //! Vectors can be easily initialized and used:
 //! ```rust
@@ -47,7 +47,7 @@
 //! ```rust
 //! # extern crate lineq;
 //! use lineq::vec3::Vec3;
-//! use lineq::mat33::Mat33;
+//! use lineq::mat::Mat33;
 //! //using a and b from first example:
 //! # let a : Vec3 = Vec3::UP;
 //! # let b : Vec3 = Vec3::LEFT;
@@ -66,8 +66,7 @@
 
 pub mod vec2;
 pub mod vec3;
-pub mod mat22;
-pub mod mat33;
+pub mod mat;
 pub mod vec3arr;
 pub mod vec2arr;
 mod arrmacro;
