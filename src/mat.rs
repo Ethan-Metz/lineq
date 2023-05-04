@@ -14,6 +14,9 @@ pub struct Mat22 {
 	pub y2 : f32,
 }
 
+/// A three by three square matrix.
+///
+/// # Examples
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Mat33 {
         pub x1 : f32,
