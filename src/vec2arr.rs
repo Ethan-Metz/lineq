@@ -67,7 +67,54 @@ impl DerefMut for Vec2raw {
 //Add
 use std::ops::Add;
 
-pv_value_impl! {Add;add;+; 1 f32; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
+impl<const N: usize> Add<f32> for Vec2arr<N> {
+    type Output = Vec2arr<N>;
+    #[inline]
+    fn add(self, rhs: f32) -> Vec2arr<N> {
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self + rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+    }
+}
+
+impl<const N: usize> Add<&f32> for Vec2arr<N> {
+    type Output = Vec2arr<N>;
+    #[inline]
+    fn add(self, rhs: &f32) -> Vec2arr<N> {
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self + rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+    }
+}
+
+impl<const N: usize> Add<f32> for &Vec2arr<N> {
+    type Output = Vec2arr<N>;
+    #[inline]
+    fn add(self, rhs: f32) -> Vec2arr<N> {
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self + rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+    }
+}
+
+impl<const N: usize> Add<&f32> for &Vec2arr<N> {
+    type Output = Vec2arr<N>;
+    #[inline]
+    fn add(self, rhs: &f32) -> Vec2arr<N> {
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self + rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+    }
+}
+
 pv_value_impl! {Add;add;+; 1 f32; for Vec2box; out: Vec2box}
 pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
