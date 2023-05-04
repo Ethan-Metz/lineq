@@ -5,7 +5,8 @@
 /// This macro expects either an internal item that is a value ("val") or a pointer
 /// ("ptr").
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - tin: The input type, this will be your outside struct type.
 /// - tout: The output type, this will be your internal type.
 /// - gen: If your struct includes one, and only one, const generic, then this will
@@ -64,7 +65,8 @@ macro_rules! deref_impl {
 /// This macro expects either an internal item that is a value ("val") or a pointer 
 /// ("ptr").
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - tin: The input type, this will be your outside struct type.
 /// - tout: The output type, this will be your internal type.
 /// - gen: If your struct includes one, and only one, const generic, then this will
@@ -131,7 +133,8 @@ macro_rules! deref_mut_impl {
 /// For example for form 2, the first type mentioned, ie rhs, will be an array while the second type,
 /// ie lhs, will be a value as the binary representation is 0b10.
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - imp: The name of the implementation for the operation that you are calling.
 /// - func: The the name of the internal function for the implementation. It may be the
 ///   implementation name but lower case, or it may be more complex.
@@ -244,7 +247,8 @@ macro_rules! pv_value_impl {
 /// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
 /// about whether rhs is an array type or a single value (1 or 0 respectively).
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - imp: The name of the implementation for the operation that you are calling.
 /// - func: The the name of the internal function for the implementation. It may be the
 ///   implementation name but lower case, or it may be more complex.
@@ -329,7 +333,8 @@ macro_rules! pv_inplace_impl {
 /// This macro is a consolidation of four [dot_impl](crate::dot_impl) calls where they 
 /// go through the four possibilities for pointer or value for the given rhs and lhs.
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - rhs: This is the type on the right hand side of the operation.
 /// - lhs: This is the type on the left hand side of the operation.
 /// - gen: If your your types include one, and only one, const generic in total, then this
@@ -412,7 +417,8 @@ macro_rules! pv_dot_impl {
 /// For example for form 2, the first type mentioned, ie rhs, will be an array while the second type,
 /// ie lhs, will be a value as the binary representation is 0b10.
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - imp: The name of the implementation for the operation that you are calling.
 /// - func: The the name of the internal function for the implementation. It may be the
 ///   implementation name but lower case, or it may be more complex.
@@ -583,7 +589,8 @@ macro_rules! value_impl {
 /// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
 /// about whether rhs is an array type or a single value (1 or 0 respectively).
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - imp: The name of the implementation for the operation that you are calling.
 /// - func: The the name of the internal function for the implementation. It may be the
 ///   implementation name but lower case, or it may be more complex.
@@ -701,7 +708,8 @@ macro_rules! inplace_impl {
 /// This macro has two forms, marked with a 0 or 1. These numbers mark in binary
 /// about whether rhs is an array type or a single value (1 or 0 respectively).
 ///
-/// Descriptions of input variables:
+/// # Arguments
+///
 /// - rhs: This is the type on the right hand side of the operation.
 /// - lhs: This is the type on the left hand side of the operation.
 /// - gen: If your your types include one, and only one, const generic in total, then this
