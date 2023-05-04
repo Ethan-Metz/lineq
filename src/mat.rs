@@ -1,5 +1,10 @@
+//! Module containing matricies.
+
 use crate::vec2::Vec2;
 
+/// A two by two square matrix.
+///
+/// # Examples
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Mat22 {
         pub x1 : f32,
