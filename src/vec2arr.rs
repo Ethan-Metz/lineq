@@ -66,7 +66,6 @@ impl DerefMut for Vec2raw {
 
 //Add
 use std::ops::Add;
-use std::ops::Index;
 	
 impl<T: Copy, const N: usize> Add<T> for Vec2arr<N>
 where 
@@ -134,8 +133,7 @@ where
     }
 }
 
-use std::slice::SliceIndex;
-
+/*
 impl<T, const N: usize> Add<T> for f32
 where 
     T: Deref<Target = [Vec2; N]>,
@@ -151,10 +149,28 @@ where
         unsafe { std::mem::transmute::<_, T>(tmp) }
     }
 }
+*/
 
-/*pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
+pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
-pv_value_impl! {Add;add;+; 3 Vec2arr<N>; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
+
+impl<T, const N: usize> Add<T> for Vec2arr<N>
+where
+    T: Deref<Target = [Vec2; N]>
+{
+    type Output = Vec2arr<N>;
+    #[inline]
+    fn $func(self, rhs: T) -> Vec2arr<N> {
+        if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self[i] + rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+    }
+}
+
+/*pv_value_impl! {Add;add;+; 3 Vec2arr<N>; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 3 Vec2box; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 3 Vec2win<'a>; for Vec2arr<N>; out: Vec2arr<N>; const N: usize; <'a>}
 pv_value_impl! {Add;add;+; 3 Vec2raw; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
