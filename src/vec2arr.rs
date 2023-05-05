@@ -98,7 +98,7 @@ where
     }
 }
 
-impl<T: Copy, const N: usize> Add<T> for Vec2box<N>
+impl<T: Copy> Add<T> for Vec2box
 where 
     Vec2: Add<T, Output = Vec2>,
 {
@@ -116,7 +116,7 @@ where
     }
 }
 
-impl<T: Copy, const N: usize> Add<T> for &Vec2box<N>
+impl<T: Copy> Add<T> for &Vec2box
 where 
     Vec2: Add<T, Output = Vec2>,
 {
