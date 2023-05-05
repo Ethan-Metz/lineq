@@ -136,7 +136,7 @@ where
 
 impl<T, I: usize, const N: usize> Add<T> for f32
 where 
-    f32: Add<<T as Index<I>>::, Output = Vec2>,
+    f32: Add<<T as Index<I>>::Output, Output = Vec2>,
 {
     type Output = T;
     #[inline]
