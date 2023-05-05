@@ -83,22 +83,13 @@ where
     }
 }
 
-/*impl<const N: usize> Add<&f32> for Vec2arr<N> {
+impl<T: Copy, const N: usize> Add<T> for &Vec2arr<N>
+where 
+    Vec2: Add<T, Output = Vec2>,
+{
     type Output = Vec2arr<N>;
     #[inline]
-    fn add(self, rhs: &f32) -> Vec2arr<N> {
-        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
-        for i in 0..N {
-            tmp[i] = self[i] + rhs;
-        }
-        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
-    }
-}*/
-
-impl<const N: usize> Add<f32> for &Vec2arr<N> {
-    type Output = Vec2arr<N>;
-    #[inline]
-    fn add(self, rhs: f32) -> Vec2arr<N> {
+    fn add(self, rhs: T) -> Vec2arr<N> {
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
             tmp[i] = self[i] + rhs;
@@ -107,17 +98,56 @@ impl<const N: usize> Add<f32> for &Vec2arr<N> {
     }
 }
 
-impl<const N: usize> Add<&f32> for &Vec2arr<N> {
-    type Output = Vec2arr<N>;
+impl<T: Copy, const N: usize> Add<T> for Vec2box<N>
+where 
+    Vec2: Add<T, Output = Vec2>,
+{
+    type Output = Vec2box;
     #[inline]
-    fn add(self, rhs: &f32) -> Vec2arr<N> {
-        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
-        for i in 0..N {
-            tmp[i] = self[i] + rhs;
-        }
-        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+    fn add(self, rhs: T) -> Vec2box {
+        let mut tmp = Box::<Vec2>::new_uninit_box(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] + rhs );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
 }
+
+impl<T: Copy, const N: usize> Add<T> for &Vec2box<N>
+where 
+    Vec2: Add<T, Output = Vec2>,
+{
+    type Output = Vec2box;
+    #[inline]
+    fn add(self, rhs: T) -> Vec2box {
+        let mut tmp = Box::<Vec2>::new_uninit_box(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] + rhs );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
+    }
+}
+
+impl $imp<$rhs> for $lhs {
+            type Output = $out;
+            #[inline]
+            fn $func(self, rhs: $rhs) -> $out {
+                let mut tmp = $out::new_uninit_box(self.len());
+                let tmp = unsafe {
+                    for i in 0..self.len() {
+                        tmp[i].as_mut_ptr().write( self[i] $op rhs );
+                    }
+                    tmp.assume_init()
+                };
+                $out(tmp)
+            }
+        }
 
 /*pv_value_impl! {Add;add;+; 1 f32; for Vec2box; out: Vec2box}
 pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
