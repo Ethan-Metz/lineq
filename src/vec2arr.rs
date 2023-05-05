@@ -134,18 +134,18 @@ where
     }
 }
 
-impl<T: Copy, const N: usize> Add<Vec2arr<N>> for T
+impl<T, const N: usize> Add<T<N>> for f32
 where 
-    Vec2: Add<T, Output = Vec2>,
+    f32: Add<T<N>, Output = Vec2>,
 {
-    type Output = Vec2arr<N>;
+    type Output = T<N>;
     #[inline]
-    fn add(self, rhs: Vec2arr<N>) -> Vec2arr<N> {
-        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+    fn add(self, rhs: T<N>) -> T<N> {
+        let mut tmp: T<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
             tmp[i] = self + rhs[i];
         }
-        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
+        unsafe { std::mem::transmute::<_, T<N>>(tmp) }
     }
 }
 
