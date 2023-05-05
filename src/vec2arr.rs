@@ -138,7 +138,7 @@ use std::slice::SliceIndex;
 
 impl<T, const N: usize> Add<T> for f32
 where 
-    T: Deref<Target = [Vec2,N]>,
+    T: Deref<Target = [Vec2; N]>,
     f32: Add<Vec2, Output = Vec2>,
 {
     type Output = T::<N>;
