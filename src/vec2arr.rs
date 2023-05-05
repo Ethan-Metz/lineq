@@ -141,9 +141,9 @@ where
     T: Deref<Target = [Vec2; N]>,
     f32: Add<Vec2, Output = Vec2>,
 {
-    type Output = T::<N>;
+    type Output = T;
     #[inline]
-    fn add(self, rhs: T) -> T::<N> {
+    fn add(self, rhs: T) -> T {
         let mut tmp: T = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
             tmp[i] = self + rhs[i];
