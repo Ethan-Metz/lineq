@@ -134,18 +134,18 @@ where
     }
 }
 
-impl<T<N>, const N: usize> Add<T<N>> for f32
+impl<T, I: usize, const N: usize> Add<T> for f32
 where 
-    f32: Add<T<N>, Output = Vec2>,
+    f32: Add<<T as Index<I>>, Output = Vec2>,
 {
-    type Output = T<N>;
+    type Output = T;
     #[inline]
-    fn add(self, rhs: T<N>) -> T<N> {
-        let mut tmp: T<N> = unsafe { MaybeUninit::uninit().assume_init() };
+    fn add(self, rhs: T) -> T {
+        let mut tmp: T = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
             tmp[i] = self + rhs[i];
         }
-        unsafe { std::mem::transmute::<_, T<N>>(tmp) }
+        unsafe { std::mem::transmute::<_, T>(tmp) }
     }
 }
 
