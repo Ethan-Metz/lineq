@@ -71,7 +71,7 @@ use std::ops::Index;
 impl<T, const N: usize> Add<T> for Vec2arr<N>
 where 
     Vec2: Add<T>,
-    <Vec2 as Add<T>>::Output: Vec2,
+    <Vec2 as Add<T>>::Output = Vec2,
 {
     type Output = Vec2arr<N>;
     #[inline]
