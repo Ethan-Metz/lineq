@@ -73,7 +73,7 @@ impl<const N: usize> Add<f32> for Vec2arr<N> {
     fn add(self, rhs: f32) -> Vec2arr<N> {
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
-            tmp[i] = self + rhs[i];
+            tmp[i] = self[i] + rhs;
         }
         unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
@@ -85,7 +85,7 @@ impl<const N: usize> Add<&f32> for Vec2arr<N> {
     fn add(self, rhs: &f32) -> Vec2arr<N> {
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
-            tmp[i] = self + rhs[i];
+            tmp[i] = self[i] + rhs;
         }
         unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
@@ -97,7 +97,7 @@ impl<const N: usize> Add<f32> for &Vec2arr<N> {
     fn add(self, rhs: f32) -> Vec2arr<N> {
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
-            tmp[i] = self + rhs[i];
+            tmp[i] = self[i] + rhs;
         }
         unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
@@ -109,7 +109,7 @@ impl<const N: usize> Add<&f32> for &Vec2arr<N> {
     fn add(self, rhs: &f32) -> Vec2arr<N> {
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
-            tmp[i] = self + rhs[i];
+            tmp[i] = self[i] + rhs;
         }
         unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
