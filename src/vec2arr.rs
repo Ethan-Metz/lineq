@@ -134,6 +134,8 @@ where
     }
 }
 
+use std::slice::SliceIndex;
+
 impl<T, I: SliceIndex, const N: usize> Add<T> for f32
 where 
     f32: Add<<T as Index<I>>::Output, Output = Vec2>,
