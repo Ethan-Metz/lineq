@@ -134,7 +134,7 @@ where
     }
 }
 
-impl<T, const N: usize> Add<T<N>> for f32
+impl<T<N>, const N: usize> Add<T<N>> for f32
 where 
     f32: Add<T<N>, Output = Vec2>,
 {
