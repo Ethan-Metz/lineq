@@ -68,7 +68,7 @@ impl DerefMut for Vec2raw {
 use std::ops::Add;
 use std::ops::Index;
 	
-impl<T: Add<Vec2>, const N: usize> Add<T> for Vec2arr<N> {
+impl<T, const N: usize> Add<T> for Vec2arr<N> where Vec2: Add<T> {
     type Output = Vec2arr<N>;
     #[inline]
     fn add(self, rhs: T) -> Vec2arr<N> {
