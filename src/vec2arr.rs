@@ -70,7 +70,7 @@ use std::ops::Index;
 	
 impl<T, const N: usize> Add<T> for Vec2arr<N>
 where
-    T: !Index,
+    T: !Index<Idx>,
 {
     type Output = Vec2arr<N>;
     #[inline]
