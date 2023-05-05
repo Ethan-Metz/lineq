@@ -67,10 +67,10 @@ impl DerefMut for Vec2raw {
 //Add
 use std::ops::Add;
 
-impl<const N: usize> Add<f32> for Vec2arr<N> {
+impl<const N: usize> Add<T: !Index> for Vec2arr<N> {
     type Output = Vec2arr<N>;
     #[inline]
-    fn add(self, rhs: f32) -> Vec2arr<N> {
+    fn add(self, rhs: T) -> Vec2arr<N> {
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
             tmp[i] = self[i] + rhs;
@@ -79,7 +79,7 @@ impl<const N: usize> Add<f32> for Vec2arr<N> {
     }
 }
 
-impl<const N: usize> Add<&f32> for Vec2arr<N> {
+/*impl<const N: usize> Add<&f32> for Vec2arr<N> {
     type Output = Vec2arr<N>;
     #[inline]
     fn add(self, rhs: &f32) -> Vec2arr<N> {
@@ -89,7 +89,7 @@ impl<const N: usize> Add<&f32> for Vec2arr<N> {
         }
         unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
-}
+}*/
 
 impl<const N: usize> Add<f32> for &Vec2arr<N> {
     type Output = Vec2arr<N>;
@@ -115,7 +115,7 @@ impl<const N: usize> Add<&f32> for &Vec2arr<N> {
     }
 }
 
-pv_value_impl! {Add;add;+; 1 f32; for Vec2box; out: Vec2box}
+/*pv_value_impl! {Add;add;+; 1 f32; for Vec2box; out: Vec2box}
 pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
 pv_value_impl! {Add;add;+; 3 Vec2arr<N>; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
@@ -129,7 +129,7 @@ pv_value_impl! {Add;add;+; 3 Vec2raw; for Vec2box; out: Vec2box}
 pv_value_impl! {Add;add;+; 3 Vec2arr<N>; for Vec2win<'a>; out: Vec2arr<N>; const N: usize; <'a>}
 pv_value_impl! {Add;add;+; 3 Vec2box; for Vec2win<'a>; out: Vec2box; <'a>}
 pv_value_impl! {Add;add;+; 3 Vec2arr<N>; for Vec2raw; out: Vec2arr<N>; const N: usize}
-pv_value_impl! {Add;add;+; 3 Vec2box; for Vec2raw; out: Vec2box}
+pv_value_impl! {Add;add;+; 3 Vec2box; for Vec2raw; out: Vec2box}*/
 
 //AddAssign
 use std::ops::AddAssign;
