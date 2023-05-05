@@ -139,6 +139,7 @@ use std::slice::SliceIndex;
 impl<T, I, const N: usize> Add<T> for f32
 where 
     T: Index<I, Output = Vec2>,
+    T: const N,
     f32: Add<Vec2, Output = Vec2>,
 {
     type Output = T;
