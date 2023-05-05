@@ -134,21 +134,6 @@ where
     }
 }
 
-impl $imp<$rhs> for $lhs {
-            type Output = $out;
-            #[inline]
-            fn $func(self, rhs: $rhs) -> $out {
-                let mut tmp = $out::new_uninit_box(self.len());
-                let tmp = unsafe {
-                    for i in 0..self.len() {
-                        tmp[i].as_mut_ptr().write( self[i] $op rhs );
-                    }
-                    tmp.assume_init()
-                };
-                $out(tmp)
-            }
-        }
-
 /*pv_value_impl! {Add;add;+; 1 f32; for Vec2box; out: Vec2box}
 pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
