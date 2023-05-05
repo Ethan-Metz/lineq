@@ -154,13 +154,15 @@ where
 pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
 
+// see https://github.com/rust-lang/rfcs/pull/1672 for fix
+
 impl<T, const N: usize> Add<T> for Vec2arr<N>
 where
     T: Deref<Target = [Vec2; N]>
 {
     type Output = Vec2arr<N>;
     #[inline]
-    fn $func(self, rhs: T) -> Vec2arr<N> {
+    fn add(self, rhs: T) -> Vec2arr<N> {
         if self.len() != rhs.len() { panic!("slice and array inequal length"); }
         let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
         for i in 0..N {
