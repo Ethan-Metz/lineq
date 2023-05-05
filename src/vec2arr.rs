@@ -105,7 +105,7 @@ where
     type Output = Vec2box;
     #[inline]
     fn add(self, rhs: T) -> Vec2box {
-        let mut tmp = Box::<Vec2>::new_uninit_box(self.len());
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
             for i in 0..self.len() {
                 tmp[i].as_mut_ptr().write( self[i] + rhs );
@@ -123,7 +123,7 @@ where
     type Output = Vec2box;
     #[inline]
     fn add(self, rhs: T) -> Vec2box {
-        let mut tmp = Box::<Vec2>::new_uninit_box(self.len());
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
             for i in 0..self.len() {
                 tmp[i].as_mut_ptr().write( self[i] + rhs );
