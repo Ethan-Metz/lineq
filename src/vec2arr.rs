@@ -171,22 +171,22 @@ pub trait N: Assoc<Type = i64> {} // None of the above
 
 // some basic impls for types to test this out
 
-impl A for Vec3arr {}
+impl A for Vec2arr {}
 impl Assoc for Vec3arr {
     type Type = i8;
 }
 
-impl B for Vec3box {}
+impl B for Vec2box {}
 impl Assoc for Vec3box {
     type Type = i16;
 }
 
-impl I for Vec3win {}
+impl I for Vec2win {}
 impl Assoc for Vec3win {
     type Type = i32;
 }
 
-impl I for Vec3raw {}
+impl I for Vec2raw {}
 impl Assoc for Vec3raw {
     type Type = i32;
 }
@@ -196,14 +196,14 @@ impl Assoc for f32 {
     type Type = i64;
 }
 
-impl N for Vec3 {}
+impl N for Vec2 {}
 impl Assoc for Vec3 {
     type Type = i64;
 }
 
 // Since impls with distinct parameters are considered disjoint
 // we can write multiple blanket impls for YakHelper given different paremeters
-trait BoxHelper<Type,Rhs> {
+trait BoxHelper<Type, Rhs = Self> {
     fn add_imp(self, rhs: Rhs);
     fn div_imp(self, rhs: Rhs);
     fn mul_imp(self, rhs: Rhs);
@@ -215,7 +215,7 @@ trait BoxHelper<Type,Rhs> {
 }
 
 // blanket impl 1
-impl<T: A> BoxValueHelper<i8> for T {
+impl<T: A> BoxHelper<i8> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for arrays")
     }
@@ -243,7 +243,7 @@ impl<T: A> BoxValueHelper<i8> for T {
 }
     
 // blanket impl 2
-impl<T: B> BoxValueHelper<i16> for T {
+impl<T: B> BoxHelper<i16> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -271,7 +271,7 @@ impl<T: B> BoxValueHelper<i16> for T {
 }
 
 // blanket impl 3
-impl<T: I> BoxValueHelper<i32> for T {
+impl<T: I> BoxHelper<i32> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -299,7 +299,7 @@ impl<T: I> BoxValueHelper<i32> for T {
 }
 
 // blanket impl 4
-impl<T: N> BoxValueHelper<i64> for T {
+impl<T: N> BoxHelper<i64> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -339,7 +339,7 @@ pub trait BoxValue<Rhs> {
 }
 
 // This delegates to a private helper trait which we can specialize on in stable rust
-impl<T: Assoc + BoxValueHelper<T::Type>> BoxValue<T> for T {
+impl<T: Assoc + BoxHelper<T::Type>> BoxValue<T> for T {
     fn add(self, rhs: T) {
         BoxValueHelper::add_imp(self, rhs)
     }
