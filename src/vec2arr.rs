@@ -164,164 +164,164 @@ pub trait Assoc {
 // Foo and Bar are mutually exclusive, but can we use that
 // to provide two blanket impls for a different trait?
 // one for Foo and one for Bar?
-pub trait Arr: Assoc<Type = i8> {} // Array type
-pub trait Box: Assoc<Type = i16> {} // Box type
-pub trait Ind: Assoc<Type = i32> {} // Indexable type
-pub trait Not: Assoc<Type = i64> {} // None of the above
+pub trait VArr: Assoc<Type = i8> {} // Array type
+pub trait VBox: Assoc<Type = i16> {} // Box type
+pub trait VInd: Assoc<Type = i32> {} // Indexable type
+pub trait VNot: Assoc<Type = i64> {} // None of the above
 
 // some basic impls for types to test this out
 
-impl Arr for Vec2arr {}
+impl VArr for Vec2arr {}
 impl Assoc for Vec2arr {
     type Type = i8;
 }
 
-impl Box for Vec2box {}
+impl VBox for Vec2box {}
 impl Assoc for Vec2box {
     type Type = i16;
 }
 
-impl Ind for Vec2win {}
+impl VInd for Vec2win {}
 impl Assoc for Vec2win {
     type Type = i32;
 }
 
-impl Ind for Vec2raw {}
+impl VInd for Vec2raw {}
 impl Assoc for Vec2raw {
     type Type = i32;
 }
 
-impl Not for f32 {}
+impl VNot for f32 {}
 impl Assoc for f32 {
     type Type = i64;
 }
 
-impl Not for Vec2 {}
+impl VNot for Vec2 {}
 impl Assoc for Vec2 {
     type Type = i64;
 }
 
 // Since impls with distinct parameters are considered disjoint
 // we can write multiple blanket impls for YakHelper given different paremeters
-trait BoxHelper<Type, Rhs = Self> {
-    fn add_imp(self, rhs: Rhs);
-    fn div_imp(self, rhs: Rhs);
-    fn mul_imp(self, rhs: Rhs);
-    fn sub_imp(self, rhs: Rhs);
-    fn add_assign_imp(&mut self, rhs: Rhs);
-    fn div_assign_imp(&mut self, rhs: Rhs);
-    fn mul_assign_imp(&mut self, rhs: Rhs);
-    fn sub_assign_imp(&mut self, rhs: Rhs);
+trait BoxHelper<Type> {
+    fn add_imp(self, rhs);
+    fn div_imp(self, rhs);
+    fn mul_imp(self, rhs);
+    fn sub_imp(self, rhs);
+    fn add_assign_imp(&mut self, rhs);
+    fn div_assign_imp(&mut self, rhs);
+    fn mul_assign_imp(&mut self, rhs);
+    fn sub_assign_imp(&mut self, rhs);
 }
 
 // blanket impl 1
-impl<T: Arr> BoxHelper<i8, Rhs = Self> for T {
-    fn add_imp(self, rhs: Rhs) {
+impl<T: VArr> BoxHelper<i8> for T {
+    fn add_imp(self, rhs) {
         println!("adding, allocating for arrays")
     }
-    fn div_imp(self, rhs: Rhs) {
+    fn div_imp(self, rhs) {
         println!("dividing, allocating for arrays")
     }
-    fn mul_imp(self, rhs: Rhs) {
+    fn mul_imp(self, rhs) {
         println!("multiplying, allocating for arrays")
     }
-    fn sub_imp(self, rhs: Rhs) {
+    fn sub_imp(self, rhs) {
         println!("subtracting, allocating for arrays")
     }
-    fn add_assign_imp(&mut self, rhs: Rhs) {
+    fn add_assign_imp(&mut self, rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs: Rhs) {
+    fn div_assign_imp(&mut self, rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs: Rhs) {
+    fn mul_assign_imp(&mut self, rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs: Rhs) {
+    fn sub_assign_imp(&mut self, rhs) {
         println!("subtracting inplace")
     }
 }
     
 // blanket impl 2
-impl<T: Box> BoxHelper<i16, Rhs = Self> for T {
-    fn add_imp(self, rhs: Rhs) {
+impl<T: VBox> BoxHelper<i16> for T {
+    fn add_imp(self, rhs) {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs: Rhs) {
+    fn div_imp(self, rhs) {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs: Rhs) {
+    fn mul_imp(self, rhs) {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs: Rhs) {
+    fn sub_imp(self, rhs) {
         println!("subtracting, allocating for boxes")
     }
-    fn add_assign_imp(&mut self, rhs: Rhs) {
+    fn add_assign_imp(&mut self, rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs: Rhs) {
+    fn div_assign_imp(&mut self, rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs: Rhs) {
+    fn mul_assign_imp(&mut self, rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs: Rhs) {
+    fn sub_assign_imp(&mut self, rhs) {
         println!("subtracting inplace")
     }
 }
 
 // blanket impl 3
-impl<T: Ind> BoxHelper<i32, Rhs = Self> for T {
-    fn add_imp(self, rhs: Rhs) {
+impl<T: VInd> BoxHelper<i32> for T {
+    fn add_imp(self, rhs) {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs: Rhs) {
+    fn div_imp(self, rhs) {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs: Rhs) {
+    fn mul_imp(self, rhs) {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs: Rhs) {
+    fn sub_imp(self, rhs) {
         println!("subtracting, allocating for boxes")
     }
-    fn add_assign_imp(&mut self, rhs: Rhs) {
+    fn add_assign_imp(&mut self, rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs: Rhs) {
+    fn div_assign_imp(&mut self, rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs: Rhs) {
+    fn mul_assign_imp(&mut self, rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs: Rhs) {
+    fn sub_assign_imp(&mut self, rhs) {
         println!("subtracting inplace")
     }
 }
 
 // blanket impl 4
-impl<T: Not> BoxHelper<i64, Rhs = Self> for T {
-    fn add_imp(self, rhs: Rhs) {
+impl<T: VNot> BoxHelper<i64> for T {
+    fn add_imp(self, rhs) {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs: Rhs) {
+    fn div_imp(self, rhs) {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs: Rhs) {
+    fn mul_imp(self, rhs) {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs: Rhs) {
+    fn sub_imp(self, rhs) {
         println!("subtracting, allocating for boxes")
     }
-    fn add_assign_imp(&mut self, rhs: Rhs) {
+    fn add_assign_imp(&mut self, rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs: Rhs) {
+    fn div_assign_imp(&mut self, rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs: Rhs) {
+    fn mul_assign_imp(&mut self, rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs: Rhs) {
+    fn sub_assign_imp(&mut self, rhs) {
         println!("subtracting inplace")
     }
 }
