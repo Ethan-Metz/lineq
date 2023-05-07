@@ -164,40 +164,40 @@ pub trait Assoc {
 // Foo and Bar are mutually exclusive, but can we use that
 // to provide two blanket impls for a different trait?
 // one for Foo and one for Bar?
-pub trait A: Assoc<Type = i8> {} // Array type
-pub trait B: Assoc<Type = i16> {} // Box type
-pub trait I: Assoc<Type = i32> {} // Indexable type
-pub trait N: Assoc<Type = i64> {} // None of the above
+pub trait Arr: Assoc<Type = i8> {} // Array type
+pub trait Box: Assoc<Type = i16> {} // Box type
+pub trait Ind: Assoc<Type = i32> {} // Indexable type
+pub trait Not: Assoc<Type = i64> {} // None of the above
 
 // some basic impls for types to test this out
 
-impl A for Vec2arr {}
-impl Assoc for Vec3arr {
+impl Arr for Vec2arr {}
+impl Assoc for Vec2arr {
     type Type = i8;
 }
 
-impl B for Vec2box {}
-impl Assoc for Vec3box {
+impl Box for Vec2box {}
+impl Assoc for Vec2box {
     type Type = i16;
 }
 
-impl I for Vec2win {}
-impl Assoc for Vec3win {
+impl Ind for Vec2win {}
+impl Assoc for Vec2win {
     type Type = i32;
 }
 
-impl I for Vec2raw {}
-impl Assoc for Vec3raw {
+impl Ind for Vec2raw {}
+impl Assoc for Vec2raw {
     type Type = i32;
 }
 
-impl N for f32 {}
+impl Not for f32 {}
 impl Assoc for f32 {
     type Type = i64;
 }
 
-impl N for Vec2 {}
-impl Assoc for Vec3 {
+impl Not for Vec2 {}
+impl Assoc for Vec2 {
     type Type = i64;
 }
 
@@ -215,7 +215,7 @@ trait BoxHelper<Type, Rhs = Self> {
 }
 
 // blanket impl 1
-impl<T: A> BoxHelper<i8> for T {
+impl<T: Arr> BoxHelper<i8, Rhs = Self> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for arrays")
     }
@@ -243,7 +243,7 @@ impl<T: A> BoxHelper<i8> for T {
 }
     
 // blanket impl 2
-impl<T: B> BoxHelper<i16> for T {
+impl<T: Box> BoxHelper<i16, Rhs = Self> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -271,7 +271,7 @@ impl<T: B> BoxHelper<i16> for T {
 }
 
 // blanket impl 3
-impl<T: I> BoxHelper<i32> for T {
+impl<T: Ind> BoxHelper<i32, Rhs = Self> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -299,7 +299,7 @@ impl<T: I> BoxHelper<i32> for T {
 }
 
 // blanket impl 4
-impl<T: N> BoxHelper<i64> for T {
+impl<T: Not> BoxHelper<i64, Rhs = Self> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -327,7 +327,7 @@ impl<T: N> BoxHelper<i64> for T {
 }
 
 // the other trait that we'll try to implement a blanket impl for
-pub trait BoxValue<Rhs> {
+pub trait BoxValue<Rhs = Self> {
     fn add(self, rhs: Rhs);
     fn div(self, rhs: Rhs);
     fn mul(self, rhs: Rhs);
