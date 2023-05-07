@@ -156,6 +156,217 @@ pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
 
 // see https://github.com/rust-lang/rfcs/pull/1672 for fix
 
+//-----------
+pub trait Assoc {
+    type Type;
+}
+
+// Foo and Bar are mutually exclusive, but can we use that
+// to provide two blanket impls for a different trait?
+// one for Foo and one for Bar?
+pub trait A: Assoc<Type = i8> {} // Array type
+pub trait B: Assoc<Type = i16> {} // Box type
+pub trait I: Assoc<Type = i32> {} // Indexable type
+pub trait N: Assoc<Type = i64> {} // None of the above
+
+// some basic impls for types to test this out
+
+impl A for Vec3arr {}
+impl Assoc for Vec3arr {
+    type Type = i8;
+}
+
+impl B for Vec3box {}
+impl Assoc for Vec3box {
+    type Type = i16;
+}
+
+impl I for Vec3win {}
+impl Assoc for Vec3win {
+    type Type = i32;
+}
+
+impl I for Vec3raw {}
+impl Assoc for Vec3raw {
+    type Type = i32;
+}
+
+impl N for f32 {}
+impl Assoc for f32 {
+    type Type = i64;
+}
+
+impl N for Vec3 {}
+impl Assoc for Vec3 {
+    type Type = i64;
+}
+
+// Since impls with distinct parameters are considered disjoint
+// we can write multiple blanket impls for YakHelper given different paremeters
+trait BoxHelper<Type,Rhs> {
+    fn add_imp(self, rhs: Rhs);
+    fn div_imp(self, rhs: Rhs);
+    fn mul_imp(self, rhs: Rhs);
+    fn sub_imp(self, rhs: Rhs);
+    fn add_assign_imp(&mut self, rhs: Rhs);
+    fn div_assign_imp(&mut self, rhs: Rhs);
+    fn mul_assign_imp(&mut self, rhs: Rhs);
+    fn sub_assign_imp(&mut self, rhs: Rhs);
+}
+
+// blanket impl 1
+impl<T: A> BoxValueHelper<i8> for T {
+    fn add_imp(self, rhs: Rhs) {
+        println!("adding, allocating for arrays")
+    }
+    fn div_imp(self, rhs: Rhs) {
+        println!("dividing, allocating for arrays")
+    }
+    fn mul_imp(self, rhs: Rhs) {
+        println!("multiplying, allocating for arrays")
+    }
+    fn sub_imp(self, rhs: Rhs) {
+        println!("subtracting, allocating for arrays")
+    }
+    fn add_assign_imp(&mut self, rhs: Rhs) {
+        println!("adding inplace")
+    }
+    fn div_assign_imp(&mut self, rhs: Rhs) {
+        println!("dividing inplace")
+    }
+    fn mul_assign_imp(&mut self, rhs: Rhs) {
+        println!("multiplying inplace")
+    }
+    fn sub_assign_imp(&mut self, rhs: Rhs) {
+        println!("subtracting inplace")
+    }
+}
+    
+// blanket impl 2
+impl<T: B> BoxValueHelper<i16> for T {
+    fn add_imp(self, rhs: Rhs) {
+        println!("adding, allocating for boxes")
+    }
+    fn div_imp(self, rhs: Rhs) {
+        println!("dividing, allocating for boxes")
+    }
+    fn mul_imp(self, rhs: Rhs) {
+        println!("multiplying, allocating for boxes")
+    }
+    fn sub_imp(self, rhs: Rhs) {
+        println!("subtracting, allocating for boxes")
+    }
+    fn add_assign_imp(&mut self, rhs: Rhs) {
+        println!("adding inplace")
+    }
+    fn div_assign_imp(&mut self, rhs: Rhs) {
+        println!("dividing inplace")
+    }
+    fn mul_assign_imp(&mut self, rhs: Rhs) {
+        println!("multiplying inplace")
+    }
+    fn sub_assign_imp(&mut self, rhs: Rhs) {
+        println!("subtracting inplace")
+    }
+}
+
+// blanket impl 3
+impl<T: I> BoxValueHelper<i32> for T {
+    fn add_imp(self, rhs: Rhs) {
+        println!("adding, allocating for boxes")
+    }
+    fn div_imp(self, rhs: Rhs) {
+        println!("dividing, allocating for boxes")
+    }
+    fn mul_imp(self, rhs: Rhs) {
+        println!("multiplying, allocating for boxes")
+    }
+    fn sub_imp(self, rhs: Rhs) {
+        println!("subtracting, allocating for boxes")
+    }
+    fn add_assign_imp(&mut self, rhs: Rhs) {
+        println!("adding inplace")
+    }
+    fn div_assign_imp(&mut self, rhs: Rhs) {
+        println!("dividing inplace")
+    }
+    fn mul_assign_imp(&mut self, rhs: Rhs) {
+        println!("multiplying inplace")
+    }
+    fn sub_assign_imp(&mut self, rhs: Rhs) {
+        println!("subtracting inplace")
+    }
+}
+
+// blanket impl 4
+impl<T: N> BoxValueHelper<i64> for T {
+    fn add_imp(self, rhs: Rhs) {
+        println!("adding, allocating for boxes")
+    }
+    fn div_imp(self, rhs: Rhs) {
+        println!("dividing, allocating for boxes")
+    }
+    fn mul_imp(self, rhs: Rhs) {
+        println!("multiplying, allocating for boxes")
+    }
+    fn sub_imp(self, rhs: Rhs) {
+        println!("subtracting, allocating for boxes")
+    }
+    fn add_assign_imp(&mut self, rhs: Rhs) {
+        println!("adding inplace")
+    }
+    fn div_assign_imp(&mut self, rhs: Rhs) {
+        println!("dividing inplace")
+    }
+    fn mul_assign_imp(&mut self, rhs: Rhs) {
+        println!("multiplying inplace")
+    }
+    fn sub_assign_imp(&mut self, rhs: Rhs) {
+        println!("subtracting inplace")
+    }
+}
+
+// the other trait that we'll try to implement a blanket impl for
+pub trait BoxValue<Rhs> {
+    fn add(self, rhs: Rhs);
+    fn div(self, rhs: Rhs);
+    fn mul(self, rhs: Rhs);
+    fn sub(self, rhs: Rhs);
+    fn add_assign(&mut self, rhs: Rhs);
+    fn div_assign(&mut self, rhs: Rhs);
+    fn mul_assign(&mut self, rhs: Rhs);
+    fn sub_assign(&mut self, rhs: Rhs);
+}
+
+// This delegates to a private helper trait which we can specialize on in stable rust
+impl<T: Assoc + BoxValueHelper<T::Type>> BoxValue<T> for T {
+    fn add(self, rhs: T) {
+        BoxValueHelper::add_imp(self, rhs)
+    }
+    fn div(self, rhs: T) {
+        BoxValueHelper::div_imp(self, rhs)
+    }
+    fn mul(self, rhs: T) {
+        BoxValueHelper::mul_imp(self, rhs)
+    }
+    fn sub(self, rhs: T) {
+        BoxValueHelper::sub_imp(self, rhs)
+    }  
+    fn add_assign(&mut self, rhs: T) {
+        BoxValueHelper::add_assign_imp(self, rhs)
+    }
+    fn div_assign(&mut self, rhs: T) {
+        BoxValueHelper::div_assign_imp(self, rhs)
+    }
+    fn mul_assign(&mut self, rhs: T) {
+        BoxValueHelper::mul_assign_imp(self, rhs)
+    }
+    fn sub_assign(&mut self, rhs: T) {
+        BoxValueHelper::sub_assign_imp(self, rhs)
+    }
+}
+//-----------
+
 impl<T, const N: usize> Add<T> for Vec2arr<N>
 where
     T: Deref<Target = [Vec2; N]>
