@@ -243,85 +243,85 @@ impl<T: VArr, Rhs> BoxHelper<i8> for T {
 }
     
 // blanket impl 2
-impl<T: VBox> BoxHelper<i16> for T {
-    fn add_imp(self, rhs) {
+impl<T: VBox, Rhs> BoxHelper<i16> for T {
+    fn add_imp(self, rhs : Rhs) {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs) {
+    fn div_imp(self, rhs : Rhs) {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs) {
+    fn mul_imp(self, rhs : Rhs) {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs) {
+    fn sub_imp(self, rhs : Rhs) {
         println!("subtracting, allocating for boxes")
     }
-    fn add_assign_imp(&mut self, rhs) {
+    fn add_assign_imp(&mut self, rhs : Rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs) {
+    fn div_assign_imp(&mut self, rhs : Rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs) {
+    fn mul_assign_imp(&mut self, rhs : Rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs) {
+    fn sub_assign_imp(&mut self, rhs : Rhs) {
         println!("subtracting inplace")
     }
 }
 
 // blanket impl 3
-impl<T: VInd> BoxHelper<i32> for T {
-    fn add_imp(self, rhs) {
+impl<T: VInd, Rhs> BoxHelper<i32> for T {
+    fn add_imp(self, rhs : Rhs) {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs) {
+    fn div_imp(self, rhs : Rhs) {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs) {
+    fn mul_imp(self, rhs : Rhs) {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs) {
+    fn sub_imp(self, rhs : Rhs) {
         println!("subtracting, allocating for boxes")
     }
-    fn add_assign_imp(&mut self, rhs) {
+    fn add_assign_imp(&mut self, rhs : Rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs) {
+    fn div_assign_imp(&mut self, rhs : Rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs) {
+    fn mul_assign_imp(&mut self, rhs : Rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs) {
+    fn sub_assign_imp(&mut self, rhs : Rhs) {
         println!("subtracting inplace")
     }
 }
 
 // blanket impl 4
-impl<T: VNot> BoxHelper<i64> for T {
-    fn add_imp(self, rhs) {
+impl<T: VNot, Rhs> BoxHelper<i64> for T {
+    fn add_imp(self, rhs : Rhs) {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs) {
+    fn div_imp(self, rhs : Rhs) {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs) {
+    fn mul_imp(self, rhs : Rhs) {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs) {
+    fn sub_imp(self, rhs : Rhs) {
         println!("subtracting, allocating for boxes")
     }
-    fn add_assign_imp(&mut self, rhs) {
+    fn add_assign_imp(&mut self, rhs : Rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs) {
+    fn div_assign_imp(&mut self, rhs : Rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs) {
+    fn mul_assign_imp(&mut self, rhs : Rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs) {
+    fn sub_assign_imp(&mut self, rhs : Rhs) {
         println!("subtracting inplace")
     }
 }
