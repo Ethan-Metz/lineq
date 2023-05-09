@@ -215,7 +215,7 @@ trait BoxHelper<Type, Rhs> {
 }
 
 // blanket impl 1
-impl<T: VArr> BoxHelper<i8, Rhs = Self> for T {
+impl<T: VArr, Rhs> BoxHelper<i8, Rhs> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for arrays")
     }
@@ -243,7 +243,7 @@ impl<T: VArr> BoxHelper<i8, Rhs = Self> for T {
 }
     
 // blanket impl 2
-impl<T: VBox> BoxHelper<i16, Rhs = Self> for T {
+impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -271,7 +271,7 @@ impl<T: VBox> BoxHelper<i16, Rhs = Self> for T {
 }
 
 // blanket impl 3
-impl<T: VInd> BoxHelper<i32, Rhs = Self> for T {
+impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -299,7 +299,7 @@ impl<T: VInd> BoxHelper<i32, Rhs = Self> for T {
 }
 
 // blanket impl 4
-impl<T: VNot> BoxHelper<i64, Rhs = Self> for T {
+impl<T: VNot, Rhs> BoxHelper<i64, Rhs> for T {
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
