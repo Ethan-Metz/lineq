@@ -339,7 +339,7 @@ pub trait BoxValue<Rhs = Self> {
 }
 
 // This delegates to a private helper trait which we can specialize on in stable rust
-impl<T: Assoc + BoxHelper<T::Type>> BoxValue<T> for T {
+impl<T: Assoc + BoxHelper<T::Type, T>> BoxValue<T> for T {
     fn add(self, rhs: T) {
         BoxHelper::add_imp(self, rhs)
     }
