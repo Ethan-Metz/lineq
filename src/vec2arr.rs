@@ -171,8 +171,8 @@ pub trait VNot: Assoc<Type = i64> {} // None of the above
 
 // some basic impls for types to test this out
 
-impl VArr for Vec2arr {}
-impl Assoc for Vec2arr {
+impl<const N: usize> VArr for Vec2arr<N> {}
+impl<const N: usize> Assoc for Vec2arr<N> {
     type Type = i8;
 }
 
@@ -181,8 +181,8 @@ impl Assoc for Vec2box {
     type Type = i16;
 }
 
-impl VInd for Vec2win {}
-impl Assoc for Vec2win {
+impl<'a> VInd for Vec2win<'a> {}
+impl<'a> Assoc for Vec2win<'a> {
     type Type = i32;
 }
 
@@ -341,28 +341,28 @@ pub trait BoxValue<Rhs = Self> {
 // This delegates to a private helper trait which we can specialize on in stable rust
 impl<T: Assoc + BoxHelper<T::Type>> BoxValue<T> for T {
     fn add(self, rhs: T) {
-        BoxValueHelper::add_imp(self, rhs)
+        BoxHelper::add_imp(self, rhs)
     }
     fn div(self, rhs: T) {
-        BoxValueHelper::div_imp(self, rhs)
+        BoxHelper::div_imp(self, rhs)
     }
     fn mul(self, rhs: T) {
-        BoxValueHelper::mul_imp(self, rhs)
+        BoxHelper::mul_imp(self, rhs)
     }
     fn sub(self, rhs: T) {
-        BoxValueHelper::sub_imp(self, rhs)
+        BoxHelper::sub_imp(self, rhs)
     }  
     fn add_assign(&mut self, rhs: T) {
-        BoxValueHelper::add_assign_imp(self, rhs)
+        BoxHelper::add_assign_imp(self, rhs)
     }
     fn div_assign(&mut self, rhs: T) {
-        BoxValueHelper::div_assign_imp(self, rhs)
+        BoxHelper::div_assign_imp(self, rhs)
     }
     fn mul_assign(&mut self, rhs: T) {
-        BoxValueHelper::mul_assign_imp(self, rhs)
+        BoxHelper::mul_assign_imp(self, rhs)
     }
     fn sub_assign(&mut self, rhs: T) {
-        BoxValueHelper::sub_assign_imp(self, rhs)
+        BoxHelper::sub_assign_imp(self, rhs)
     }
 }
 //-----------
