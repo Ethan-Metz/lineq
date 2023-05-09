@@ -67,7 +67,7 @@ impl DerefMut for Vec2raw {
 //Add
 use std::ops::Add;
 	
-impl<T: Copy, const N: usize> Add<T> for Vec2arr<N>
+/*impl<T: Copy, const N: usize> Add<T> for Vec2arr<N>
 where 
     Vec2: Add<T, Output = Vec2>,
 {
@@ -132,7 +132,7 @@ where
         Vec2box(tmp)
     }
 }
-
+*/
 /*
 impl<T, const N: usize> Add<T> for f32
 where 
@@ -150,10 +150,10 @@ where
     }
 }
 */
-
+/*
 pv_value_impl! {Add;add;+; 2 Vec2arr<N>; for f32; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
-
+*/
 // see https://github.com/rust-lang/rfcs/pull/1672 for fix
 
 //-----------
@@ -366,7 +366,7 @@ impl<T: Assoc + BoxHelper<T::Type, T>> BoxValue<T> for T {
     }
 }
 //-----------
-
+/*
 impl<T, const N: usize> Add<T> for Vec2arr<N>
 where
     T: Deref<Target = [Vec2; N]>
@@ -382,7 +382,7 @@ where
         unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
 }
-
+*/
 /*pv_value_impl! {Add;add;+; 3 Vec2arr<N>; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 3 Vec2box; for Vec2arr<N>; out: Vec2arr<N>; const N: usize}
 pv_value_impl! {Add;add;+; 3 Vec2win<'a>; for Vec2arr<N>; out: Vec2arr<N>; const N: usize; <'a>}
