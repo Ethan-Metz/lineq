@@ -215,29 +215,29 @@ trait BoxHelper<Type> {
 }
 
 // blanket impl 1
-impl<T: VArr> BoxHelper<i8> for T {
-    fn add_imp(self, rhs) {
+impl<T: VArr> BoxHelper<i8, Rhs> for T {
+    fn add_imp(self, rhs : Rhs) {
         println!("adding, allocating for arrays")
     }
-    fn div_imp(self, rhs) {
+    fn div_imp(self, rhs : Rhs) {
         println!("dividing, allocating for arrays")
     }
-    fn mul_imp(self, rhs) {
+    fn mul_imp(self, rhs : Rhs) {
         println!("multiplying, allocating for arrays")
     }
-    fn sub_imp(self, rhs) {
+    fn sub_imp(self, rhs : Rhs) {
         println!("subtracting, allocating for arrays")
     }
-    fn add_assign_imp(&mut self, rhs) {
+    fn add_assign_imp(&mut self, rhs : Rhs) {
         println!("adding inplace")
     }
-    fn div_assign_imp(&mut self, rhs) {
+    fn div_assign_imp(&mut self, rhs : Rhs) {
         println!("dividing inplace")
     }
-    fn mul_assign_imp(&mut self, rhs) {
+    fn mul_assign_imp(&mut self, rhs : Rhs) {
         println!("multiplying inplace")
     }
-    fn sub_assign_imp(&mut self, rhs) {
+    fn sub_assign_imp(&mut self, rhs : Rhs) {
         println!("subtracting inplace")
     }
 }
