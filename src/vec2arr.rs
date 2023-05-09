@@ -161,9 +161,6 @@ pub trait Assoc {
     type Type;
 }
 
-// Foo and Bar are mutually exclusive, but can we use that
-// to provide two blanket impls for a different trait?
-// one for Foo and one for Bar?
 pub trait VArr: Assoc<Type = i8> {} // Array type
 pub trait VBox: Assoc<Type = i16> {} // Box type
 pub trait VInd: Assoc<Type = i32> {} // Indexable type
@@ -203,7 +200,7 @@ impl Assoc for Vec2 {
 
 // Since impls with distinct parameters are considered disjoint
 // we can write multiple blanket impls for YakHelper given different paremeters
-trait BoxHelper<Type, Rhs> {
+trait BoxHelper<Type, Rhs> { //used when lhs is a box type
     fn add_imp(self, rhs: Rhs);
     fn div_imp(self, rhs: Rhs);
     fn mul_imp(self, rhs: Rhs);
@@ -215,7 +212,7 @@ trait BoxHelper<Type, Rhs> {
 }
 
 // blanket impl 1
-impl<T: VArr, Rhs> BoxHelper<i8, Rhs> for T {
+impl<T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for arrays")
     }
@@ -243,18 +240,40 @@ impl<T: VArr, Rhs> BoxHelper<i8, Rhs> for T {
 }
     
 // blanket impl 2
-impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T {
-    fn add_imp(self, rhs: Rhs) {
-        println!("adding, allocating for boxes")
+impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
+    fn add_imp(self, rhs: Rhs) -> Vec2box {
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] + rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
-    fn div_imp(self, rhs: Rhs) {
-        println!("dividing, allocating for boxes")
+    fn div_imp(self, rhs: Rhs) {}
+    fn mul_imp(self, rhs: Rhs) -> Box<[f32]> {
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[f32]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write(self[i]*rhs[i]);
+            }
+            tmp.assume_init()
+        };
+        tmp
     }
-    fn mul_imp(self, rhs: Rhs) {
-        println!("multiplying, allocating for boxes")
-    }
-    fn sub_imp(self, rhs: Rhs) {
-        println!("subtracting, allocating for boxes")
+    fn sub_imp(self, rhs: Rhs) -> Vec2box {
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] + rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
         println!("adding inplace")
@@ -271,7 +290,7 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T {
 }
 
 // blanket impl 3
-impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T {
+impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T { //Rhs is indexable type
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
@@ -299,7 +318,7 @@ impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T {
 }
 
 // blanket impl 4
-impl<T: VNot, Rhs> BoxHelper<i64, Rhs> for T {
+impl<T: VNot, Rhs> BoxHelper<i64, Rhs> for T { //Rhs is none of the above type
     fn add_imp(self, rhs: Rhs) {
         println!("adding, allocating for boxes")
     }
