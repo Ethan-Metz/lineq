@@ -201,10 +201,10 @@ impl Assoc for Vec2 {
 // Since impls with distinct parameters are considered disjoint
 // we can write multiple blanket impls for YakHelper given different paremeters
 trait BoxHelper<Type, Rhs> { //used when lhs is a box type
-    fn add_imp(self, rhs: Rhs);
-    fn div_imp(self, rhs: Rhs);
-    fn mul_imp(self, rhs: Rhs);
-    fn sub_imp(self, rhs: Rhs);
+    fn add_imp(self, rhs: Rhs) -> Vec2box;
+    fn div_imp(self, rhs: Rhs) -> Vec2box;
+    fn mul_imp(self, rhs: Rhs) -> Box<[f32]>;
+    fn sub_imp(self, rhs: Rhs) -> Vec2box;
     fn add_assign_imp(&mut self, rhs: Rhs);
     fn div_assign_imp(&mut self, rhs: Rhs);
     fn mul_assign_imp(&mut self, rhs: Rhs);
