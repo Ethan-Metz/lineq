@@ -203,7 +203,7 @@ impl Assoc for Vec2 {
 trait BoxHelper<Type, Rhs> { //used when lhs is a box type
     fn add_imp(self, rhs: Rhs) -> Vec2box;
     fn div_imp(self, rhs: Rhs) -> Vec2box;
-    fn mul_imp(self, rhs: Rhs) -> Box<[f32]>;
+    fn mul_imp(self, rhs: Rhs) -> Vec2box;
     fn sub_imp(self, rhs: Rhs) -> Vec2box;
     fn add_assign_imp(&mut self, rhs: Rhs);
     fn div_assign_imp(&mut self, rhs: Rhs);
@@ -253,16 +253,16 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
         Vec2box(tmp)
     }
     fn div_imp(self, rhs: Rhs) {}
-    fn mul_imp(self, rhs: Rhs) -> Box<[f32]> {
+    fn mul_imp(self, rhs: Rhs) -> Vec2box {
         if self.len() != rhs.len() { panic!("slices inequal length"); }
-        let mut tmp = Box::<[f32]>::new_uninit_slice(self.len());
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
             for i in 0..self.len() {
-                tmp[i].as_mut_ptr().write(self[i]*rhs[i]);
+                tmp[i].as_mut_ptr().write( self[i] * rhs[i] );
             }
             tmp.assume_init()
         };
-        tmp
+        Vec2box(tmp)
     }
     fn sub_imp(self, rhs: Rhs) -> Vec2box {
         if self.len() != rhs.len() { panic!("slices inequal length"); }
