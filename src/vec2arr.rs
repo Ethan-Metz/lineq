@@ -249,7 +249,8 @@ impl<const N: usize, T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array typ
     
 // blanket impl 2
 impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
-    fn add_imp(self, rhs: Rhs) -> T::AddType {
+    type AddType = Vec2box;
+    fn add_imp(self, rhs: Rhs) -> Vec2box {
         if self.len() != rhs.len() { panic!("slices inequal length"); }
         let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
@@ -260,8 +261,10 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
         };
         Vec2box(tmp)
     }
-    fn div_imp(self, rhs: Rhs) -> T::DivType {}
-    fn mul_imp(self, rhs: Rhs) -> T::MulType {
+    type DivType = Vec2box;
+    fn div_imp(self, rhs: Rhs) -> Vec2box {}
+    type MulType = Vec2box;
+    fn mul_imp(self, rhs: Rhs) -> Vec2box {
         if self.len() != rhs.len() { panic!("slices inequal length"); }
         let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
@@ -272,7 +275,8 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
         };
         Vec2box(tmp)
     }
-    fn sub_imp(self, rhs: Rhs) -> T::SubType {
+    type SubType = Vec2box;
+    fn sub_imp(self, rhs: Rhs) -> Vec2box {
         if self.len() != rhs.len() { panic!("slices inequal length"); }
         let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
@@ -299,16 +303,20 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
 
 // blanket impl 3
 impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T { //Rhs is indexable type
-    fn add_imp(self, rhs: Rhs) -> T::AddType {
+    type AddType = Vec2box;
+    fn add_imp(self, rhs: Rhs) -> Vec2box {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs: Rhs) -> T::DivType {
+    type DivType = Vec2box;
+    fn div_imp(self, rhs: Rhs) -> Vec2box {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs: Rhs) -> T::MulType {
+    type MulType = Vec2box;
+    fn mul_imp(self, rhs: Rhs) -> Vec2box {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs: Rhs) -> T::SubType {
+    type SubType = Vec2box;
+    fn sub_imp(self, rhs: Rhs) -> Vec2box {
         println!("subtracting, allocating for boxes")
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
@@ -327,16 +335,20 @@ impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T { //Rhs is indexable type
 
 // blanket impl 4
 impl<T: VNot, Rhs> BoxHelper<i64, Rhs> for T { //Rhs is none of the above type
-    fn add_imp(self, rhs: Rhs) -> T::AddType {
+    type AddType = Vec2box;
+    fn add_imp(self, rhs: Rhs) -> Vec2box {
         println!("adding, allocating for boxes")
     }
-    fn div_imp(self, rhs: Rhs) -> T::DivType {
+    type DivType = Vec2box;
+    fn div_imp(self, rhs: Rhs) -> Vec2box {
         println!("dividing, allocating for boxes")
     }
-    fn mul_imp(self, rhs: Rhs) -> T::MulType {
+    type MulType = Vec2box;
+    fn mul_imp(self, rhs: Rhs) -> Vec2box {
         println!("multiplying, allocating for boxes")
     }
-    fn sub_imp(self, rhs: Rhs) -> T::SubType {
+    type SubType = Vec2box;
+    fn sub_imp(self, rhs: Rhs) -> Vec2box {
         println!("subtracting, allocating for boxes")
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
