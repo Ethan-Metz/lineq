@@ -219,19 +219,39 @@ trait BoxHelper<ID, Rhs> { //used when lhs is a box type
 impl<const N: usize, T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
     type AddType = Vec2arr<N>;
     fn add_imp(self, rhs: Rhs) -> Vec2arr<N> {
-        println!("adding, allocating for arrays")
+        if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self[i] + rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
     type DivType = Vec2arr<N>;
     fn div_imp(self, rhs: Rhs) -> Vec2arr<N> {
-        println!("dividing, allocating for arrays")
+        if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self[i] / rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
     type MulType = Vec2arr<N>;
     fn mul_imp(self, rhs: Rhs) -> Vec2arr<N> {
-        println!("multiplying, allocating for arrays")
+        if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self[i] * rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
     type SubType = Vec2arr<N>;
     fn sub_imp(self, rhs: Rhs) -> Vec2arr<N> {
-        println!("subtracting, allocating for arrays")
+        if self.len() != rhs.len() { panic!("slice and array inequal length"); }
+        let mut tmp: Vec2arr<N> = unsafe { MaybeUninit::uninit().assume_init() };
+        for i in 0..N {
+            tmp[i] = self[i] - rhs[i];
+        }
+        unsafe { std::mem::transmute::<_, Vec2arr<N>>(tmp) }
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
         println!("adding inplace")
@@ -262,7 +282,17 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
         Vec2box(tmp)
     }
     type DivType = Vec2box;
-    fn div_imp(self, rhs: Rhs) -> Vec2box {}
+    fn div_imp(self, rhs: Rhs) -> Vec2box {
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] / rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
+    }
     type MulType = Vec2box;
     fn mul_imp(self, rhs: Rhs) -> Vec2box {
         if self.len() != rhs.len() { panic!("slices inequal length"); }
@@ -281,7 +311,7 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
         let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
         let tmp = unsafe {
             for i in 0..self.len() {
-                tmp[i].as_mut_ptr().write( self[i] + rhs[i] );
+                tmp[i].as_mut_ptr().write( self[i] - rhs[i] );
             }
             tmp.assume_init()
         };
@@ -305,19 +335,51 @@ impl<T: VBox, Rhs> BoxHelper<i16, Rhs> for T { //Rhs is box type
 impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T { //Rhs is indexable type
     type AddType = Vec2box;
     fn add_imp(self, rhs: Rhs) -> Vec2box {
-        println!("adding, allocating for boxes")
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] + rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     type DivType = Vec2box;
     fn div_imp(self, rhs: Rhs) -> Vec2box {
-        println!("dividing, allocating for boxes")
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] / rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     type MulType = Vec2box;
     fn mul_imp(self, rhs: Rhs) -> Vec2box {
-        println!("multiplying, allocating for boxes")
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] * rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     type SubType = Vec2box;
     fn sub_imp(self, rhs: Rhs) -> Vec2box {
-        println!("subtracting, allocating for boxes")
+        if self.len() != rhs.len() { panic!("slices inequal length"); }
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] - rhs[i] );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
         println!("adding inplace")
@@ -337,19 +399,47 @@ impl<T: VInd, Rhs> BoxHelper<i32, Rhs> for T { //Rhs is indexable type
 impl<T: VNot, Rhs> BoxHelper<i64, Rhs> for T { //Rhs is none of the above type
     type AddType = Vec2box;
     fn add_imp(self, rhs: Rhs) -> Vec2box {
-        println!("adding, allocating for boxes")
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] + rhs );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     type DivType = Vec2box;
     fn div_imp(self, rhs: Rhs) -> Vec2box {
-        println!("dividing, allocating for boxes")
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] / rhs );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     type MulType = Vec2box;
     fn mul_imp(self, rhs: Rhs) -> Vec2box {
-        println!("multiplying, allocating for boxes")
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] * rhs );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     type SubType = Vec2box;
     fn sub_imp(self, rhs: Rhs) -> Vec2box {
-        println!("subtracting, allocating for boxes")
+        let mut tmp = Box::<[Vec2]>::new_uninit_slice(self.len());
+        let tmp = unsafe {
+            for i in 0..self.len() {
+                tmp[i].as_mut_ptr().write( self[i] - rhs );
+            }
+            tmp.assume_init()
+        };
+        Vec2box(tmp)
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
         println!("adding inplace")
