@@ -159,10 +159,6 @@ pv_value_impl! {Add;add;+; 2 Vec2box; for f32; out: Vec2box}
 //-----------
 pub trait Assoc {
     type ID;
-    type AddType;
-    type DivType;
-    type MulType;
-    type SubType;
 }
 
 pub trait VArr: Assoc<ID = i8> {} // Array type
@@ -220,7 +216,7 @@ trait BoxHelper<ID, Rhs> { //used when lhs is a box type
 }
 
 // blanket impl 1
-impl<const N: usize, T: VArr<N>, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
+impl<const N: usize, T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
     type AddType = Vec2arr<N>;
     fn add_imp(self, rhs: Rhs) -> Vec2arr<N> {
         println!("adding, allocating for arrays")
@@ -370,7 +366,7 @@ pub trait BoxValue<Rhs = Self> {
 }
 
 // This delegates to a private helper trait which we can specialize on in stable rust
-impl<T: Assoc + BoxHelper<T::Type, T>> BoxValue<T> for T {
+impl<T: Assoc + BoxHelper<T::ID, T>> BoxValue<T> for T {
     fn add(self, rhs: T) {
         BoxHelper::add_imp(self, rhs)
     }
