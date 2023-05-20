@@ -165,7 +165,7 @@ pub trait Assoc {
     type SubType;
 }
 
-pub trait VArr: Assoc<ID = i8, AddType = Vec2arr<N>, DivType = Vec2arr<N>, MulType = Vec2arr<N>, SubType = Vec2arr<N>> {} // Array type
+pub trait<const N: usize> VArr: Assoc<ID = i8, AddType = Vec2arr<N>, DivType = Vec2arr<N>, MulType = Vec2arr<N>, SubType = Vec2arr<N>> {} // Array type
 pub trait VBox: Assoc<ID = i16, AddType = Vec2box, DivType = Vec2box, MulType = Vec2box, SubType = Vec2box> {} // Box type
 pub trait VInd: Assoc<ID = i32, AddType = Vec2box, DivType = Vec2box, MulType = Vec2box, SubType = Vec2box> {} // Indexable type
 pub trait VNot: Assoc<ID = i64, AddType = Vec2box, DivType = Vec2box, MulType = Vec2box, SubType = Vec2box> {} // None of the above
