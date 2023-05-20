@@ -165,73 +165,53 @@ pub trait Assoc {
     type SubType;
 }
 
-pub trait VArr<const N: usize>: Assoc<ID = i8, AddType = Vec2arr<N>, DivType = Vec2arr<N>, MulType = Vec2arr<N>, SubType = Vec2arr<N>> {} // Array type
-pub trait VBox: Assoc<ID = i16, AddType = Vec2box, DivType = Vec2box, MulType = Vec2box, SubType = Vec2box> {} // Box type
-pub trait VInd: Assoc<ID = i32, AddType = Vec2box, DivType = Vec2box, MulType = Vec2box, SubType = Vec2box> {} // Indexable type
-pub trait VNot: Assoc<ID = i64, AddType = Vec2box, DivType = Vec2box, MulType = Vec2box, SubType = Vec2box> {} // None of the above
+pub trait VArr: Assoc<ID = i8> {} // Array type
+pub trait VBox: Assoc<ID = i16> {} // Box type
+pub trait VInd: Assoc<ID = i32> {} // Indexable type
+pub trait VNot: Assoc<ID = i64> {} // None of the above
 
 // some basic impls for types to test this out
 
-impl<const N: usize> VArr<N> for Vec2arr<N> {}
+impl<const N: usize> VArr for Vec2arr<N> {}
 impl<const N: usize> Assoc for Vec2arr<N> {
     type ID = i8;
-    type AddType = Vec2arr<N>;
-    type DivType = Vec2arr<N>;
-    type MulType = Vec2arr<N>;
-    type SubType = Vec2arr<N>;
 }
 
 impl VBox for Vec2box {}
 impl Assoc for Vec2box {
     type ID = i16;
-    type AddType = Vec2box;
-    type DivType = Vec2box;
-    type MulType = Vec2box;
-    type SubType = Vec2box;
 }
 
 impl<'a> VInd for Vec2win<'a> {}
 impl<'a> Assoc for Vec2win<'a> {
     type ID = i32;
-    type AddType = Vec2box;
-    type DivType = Vec2box;
-    type MulType = Vec2box;
-    type SubType = Vec2box;
 }
 
 impl VInd for Vec2raw {}
 impl Assoc for Vec2raw {
     type ID = i32;
-    type AddType = Vec2box;
-    type DivType = Vec2box;
-    type MulType = Vec2box;
-    type SubType = Vec2box;
 }
 
 impl VNot for f32 {}
 impl Assoc for f32 {
     type ID = i64;
-    type AddType = Vec2box;
-    type DivType = Vec2box;
-    type MulType = Vec2box;
-    type SubType = Vec2box;
 }
 
 impl VNot for Vec2 {}
 impl Assoc for Vec2 {
     type ID = i64;
-    type AddType = Vec2box;
-    type DivType = Vec2box;
-    type MulType = Vec2box;
-    type SubType = Vec2box;
 }
 
 // Since impls with distinct parameters are considered disjoint
 // we can write multiple blanket impls for YakHelper given different paremeters
 trait BoxHelper<ID, Rhs> { //used when lhs is a box type
+    type AddType;
     fn add_imp(self, rhs: Rhs) -> Self::AddType;
+    type DivType;
     fn div_imp(self, rhs: Rhs) -> Self::DivType;
+    type MulType;
     fn mul_imp(self, rhs: Rhs) -> Self::MulType;
+    type SubType;
     fn sub_imp(self, rhs: Rhs) -> Self::SubType;
     fn add_assign_imp(&mut self, rhs: Rhs);
     fn div_assign_imp(&mut self, rhs: Rhs);
@@ -241,16 +221,20 @@ trait BoxHelper<ID, Rhs> { //used when lhs is a box type
 
 // blanket impl 1
 impl<const N: usize, T: VArr<N>, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
-    fn add_imp(self, rhs: Rhs) -> T::AddType {
+    type AddType = Vec2arr<N>;
+    fn add_imp(self, rhs: Rhs) -> Vec2arr<N> {
         println!("adding, allocating for arrays")
     }
-    fn div_imp(self, rhs: Rhs) -> T::DivType {
+    type DivType = Vec2arr<N>;
+    fn div_imp(self, rhs: Rhs) -> Vec2arr<N> {
         println!("dividing, allocating for arrays")
     }
-    fn mul_imp(self, rhs: Rhs) -> T::MulType {
+    type MulType = Vec2arr<N>;
+    fn mul_imp(self, rhs: Rhs) -> Vec2arr<N> {
         println!("multiplying, allocating for arrays")
     }
-    fn sub_imp(self, rhs: Rhs) -> T::SubType {
+    type SubType = Vec2arr<N>;
+    fn sub_imp(self, rhs: Rhs) -> Vec2arr<N> {
         println!("subtracting, allocating for arrays")
     }
     fn add_assign_imp(&mut self, rhs: Rhs) {
