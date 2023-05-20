@@ -172,7 +172,7 @@ pub trait VNot: Assoc<ID = i64, AddType = Vec2box, DivType = Vec2box, MulType = 
 
 // some basic impls for types to test this out
 
-impl<const N: usize> VArr for Vec2arr<N> {}
+impl<const N: usize> VArr<N> for Vec2arr<N> {}
 impl<const N: usize> Assoc for Vec2arr<N> {
     type ID = i8;
     type AddType = Vec2arr<N>;
@@ -240,7 +240,7 @@ trait BoxHelper<ID, Rhs> { //used when lhs is a box type
 }
 
 // blanket impl 1
-impl<T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
+impl<const N: usize, T: VArr<N>, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
     fn add_imp(self, rhs: Rhs) -> T::AddType {
         println!("adding, allocating for arrays")
     }
