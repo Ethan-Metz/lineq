@@ -216,7 +216,7 @@ trait BoxHelper<ID, Rhs> { //used when lhs is a box type
 }
 
 // blanket impl 1
-impl<const N: usize, T: VArr<N>, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
+impl<T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
     type AddType = Vec2arr<N>;
     fn add_imp(self, rhs: Rhs) -> Vec2arr<N> {
         if self.len() != rhs.len() { panic!("slice and array inequal length"); }
