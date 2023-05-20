@@ -161,14 +161,14 @@ pub trait Assoc {
     type ID;
 }
 
-pub trait VArr: Assoc<ID = i8> {} // Array type
+pub trait VArr<const N: usize>: Assoc<ID = i8> {} // Array type
 pub trait VBox: Assoc<ID = i16> {} // Box type
 pub trait VInd: Assoc<ID = i32> {} // Indexable type
 pub trait VNot: Assoc<ID = i64> {} // None of the above
 
 // some basic impls for types to test this out
 
-impl<const N: usize> VArr for Vec2arr<N> {}
+impl<const N: usize> VArr<N> for Vec2arr<N> {}
 impl<const N: usize> Assoc for Vec2arr<N> {
     type ID = i8;
 }
@@ -216,7 +216,7 @@ trait BoxHelper<ID, Rhs> { //used when lhs is a box type
 }
 
 // blanket impl 1
-impl<const N: usize, T: VArr, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
+impl<const N: usize, T: VArr<N>, Rhs> BoxHelper<i8, Rhs> for T { //Rhs is array type
     type AddType = Vec2arr<N>;
     fn add_imp(self, rhs: Rhs) -> Vec2arr<N> {
         if self.len() != rhs.len() { panic!("slice and array inequal length"); }
